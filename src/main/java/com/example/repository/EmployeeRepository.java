@@ -1,4 +1,10 @@
 package com.example.repository;
 
-public class EmployeeRepository implements EmployeeRepositoryInterface {
+import com.example.data.dto.EmployeeDTO;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface EmployeeRepository {
+
+    public EmployeeDTO findEmployeeById(Long employee_id);
 }
