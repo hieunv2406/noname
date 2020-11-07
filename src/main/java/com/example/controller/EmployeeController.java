@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.config.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 import com.example.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,16 +8,43 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
-@RestController(value = "/employeeController")
+
+@RestController
+@RequestMapping(value = "/employeeController")
 public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
-
-    @GetMapping(value = "/getDetail/{employeeId}")
-    public ResponseEntity<EmployeeDTO> findEmployeeById(@PathVariable("employeeId") Long employeeId) {
+    @GetMapping(value = "/getDetail")
+    public ResponseEntity<EmployeeDTO> findEmployeeById(@RequestParam Long employeeId) {
         EmployeeDTO employeeDTO = employeeService.findEmployeeById(employeeId);
         return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/insert")
+    public ResponseEntity<ResultInsideDTO> insertEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        ResultInsideDTO resultInsideDTO = employeeService.insertEmployee(employeeDTO);
+        return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/update")
+    public ResponseEntity<ResultInsideDTO> updateEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        ResultInsideDTO resultInsideDTO = employeeService.updateEmployee(employeeDTO);
+        return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/delete")
+    public ResponseEntity<ResultInsideDTO> deleteEmployeeById(@RequestParam Long employeeId) {
+        ResultInsideDTO resultInsideDTO = employeeService.deleteEmployeeById(employeeId);
+        return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/findAll")
+    public ResponseEntity<List<EmployeeDTO>> getListEmployeeDTO(@RequestBody EmployeeDTO employeeDTO) {
+        List<EmployeeDTO> employeeDTOList = employeeService.getListEmployeeDTO(employeeDTO);
+        return new ResponseEntity<>(employeeDTOList, HttpStatus.OK);
+    }
+
 }
