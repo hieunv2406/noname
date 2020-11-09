@@ -1,19 +1,29 @@
 package com.example.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
+import java.util.List;
+import java.util.Map;
+
 @NoArgsConstructor
 @Getter
 @Setter
 public class BaseDTO {
 
-    private Long page;
-    private Long pageSize;
-    private String sortBy;
-    private String sortOrder;
+    private Integer page;
+    private Integer pageSize;
+    private String sortName;
+    private String sortType;
+    private Integer totalRow;
+    private Integer indexRow;
+    private String langKey;
+    private String timeOffset;
+    private String sqlQuery;
+    private List<Long> listId;
+    private Map<String, Object> parameters;
+    private String searchAll;
+    private String proxyLocale;
 
 }
