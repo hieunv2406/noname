@@ -28,11 +28,14 @@ public class EmployeeEntity implements Serializable {
     @Column(name = "CODE")
     private String code;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "USERNAME")
+    private String username;
 
     @Column(name = "FULL_NAME")
     private String fullName;
+
+    @Column(name = "EMAIL")
+    private String email;
 
     @Column(name = "BIRTHDAY")
     private Date birthday;
@@ -47,8 +50,9 @@ public class EmployeeEntity implements Serializable {
         return new EmployeeDTO(
                 employeeId,
                 code,
-                name,
+                username,
                 fullName,
+                email,
                 birthday,
                 gender,
                 address

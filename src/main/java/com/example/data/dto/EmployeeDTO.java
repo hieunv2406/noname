@@ -16,17 +16,19 @@ public class EmployeeDTO extends BaseDTO {
 
     private Long employeeId;
     private String code;
-    private String name;
+    private String username;
     private String fullName;
+    private String email;
     private Date birthday;
     private Long gender;
     private String address;
 
-    public EmployeeDTO(Long employeeId, String code, String name, String fullName, Date birthday, Long gender, String address) {
+    public EmployeeDTO(Long employeeId, String code, String username, String fullName, String email, Date birthday, Long gender, String address) {
         this.employeeId = employeeId;
         this.code = code;
-        this.name = name;
+        this.username = username;
         this.fullName = fullName;
+        this.email = email;
         this.birthday = birthday;
         this.gender = gender;
         this.address = address;
@@ -36,8 +38,9 @@ public class EmployeeDTO extends BaseDTO {
         return new EmployeeEntity(
                 employeeId,
                 code,
-                name,
+                username,
                 fullName,
+                email,
                 birthday,
                 gender,
                 address
