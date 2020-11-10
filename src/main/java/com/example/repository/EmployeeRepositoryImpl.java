@@ -1,6 +1,9 @@
 package com.example.repository;
 
-import com.example.config.*;
+import com.example.common.*;
+import com.example.common.dto.BaseDTO;
+import com.example.common.dto.ResultInsideDTO;
+import com.example.common.repository.BaseRepository;
 import com.example.data.dto.EmployeeDTO;
 import com.example.data.entity.EmployeeEntity;
 import org.springframework.stereotype.Repository;

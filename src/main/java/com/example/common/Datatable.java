@@ -1,4 +1,4 @@
-package com.example.config;
+package com.example.common;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
