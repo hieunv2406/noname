@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.config.Datatable;
 import com.example.config.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 import com.example.service.EmployeeService;
@@ -8,14 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping(value = "/employeeController")
 public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
+
+    @PostMapping(value = "/getEmployeeDTO")
+    public ResponseEntity<Datatable> getListEmployeeDTO(@RequestBody EmployeeDTO employeeDTO) {
+        Datatable datatable = employeeService.getListEmployeeDTO(employeeDTO);
+        return new ResponseEntity<>(datatable, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/getDetail")
     public ResponseEntity<EmployeeDTO> findEmployeeById(@RequestParam Long employeeId) {
@@ -39,12 +44,6 @@ public class EmployeeController {
     public ResponseEntity<ResultInsideDTO> deleteEmployeeById(@RequestParam Long employeeId) {
         ResultInsideDTO resultInsideDTO = employeeService.deleteEmployeeById(employeeId);
         return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/findAll")
-    public ResponseEntity<List<EmployeeDTO>> getListEmployeeDTO(@RequestBody EmployeeDTO employeeDTO) {
-        List<EmployeeDTO> employeeDTOList = employeeService.getListEmployeeDTO(employeeDTO);
-        return new ResponseEntity<>(employeeDTOList, HttpStatus.OK);
     }
 
 }

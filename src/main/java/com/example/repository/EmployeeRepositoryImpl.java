@@ -1,15 +1,12 @@
 package com.example.repository;
 
-import com.example.config.BaseRepository;
-import com.example.config.Constant;
-import com.example.config.ResultInsideDTO;
+import com.example.config.*;
 import com.example.data.dto.EmployeeDTO;
 import com.example.data.entity.EmployeeEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Transactional
@@ -57,16 +54,38 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
     }
 
     @Override
-    public List<EmployeeDTO> getListEmployeeDTO(EmployeeDTO employeeDTO) {
-        Map<String,String> parameter = new HashMap<>();
-        String sql = "Select * from employee";
-        if (employeeDTO != null){
-            if (employeeDTO.getCode() != null){
+    public Datatable getListEmployeeDTO(EmployeeDTO employeeDTO) {
+        BaseDTO baseDTO = sqlSearch(employeeDTO);
+        return getListDataTableBySqlQuery(baseDTO.getSqlQuery(),
+                baseDTO.getParameters(), employeeDTO.getPage(), employeeDTO.getPageSize(),
+                EmployeeDTO.class,
+                employeeDTO.getSortName(), employeeDTO.getSortType());
+    }
+
+    private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {
+        BaseDTO baseDTO = new BaseDTO();
+        Map<String, Object> parameter = new HashMap<>();
+        String sql = " select " +
+                " e.employee_id employeeId, " +
+                " e.code code, " +
+                " e.username username, " +
+                " e.full_name fullName, " +
+                " e.email email, " +
+                " e.birthday birthday, " +
+                " e.gender gender, " +
+                " e.address " +
+                " from " +
+                " employee e " +
+                " where " +
+                " 1 = 1 ";
+        if (employeeDTO != null) {
+            if (employeeDTO.getCode() != null) {
                 sql += " And e.code = :code ";
                 parameter.put("code", employeeDTO.getCode());
             }
         }
-
-        return null;
+        baseDTO.setSqlQuery(sql);
+        baseDTO.setParameters(parameter);
+        return baseDTO;
     }
 }

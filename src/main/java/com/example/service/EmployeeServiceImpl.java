@@ -1,12 +1,11 @@
 package com.example.service;
 
+import com.example.config.Datatable;
 import com.example.config.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 import com.example.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -34,7 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDTO> getListEmployeeDTO(EmployeeDTO employeeDTO) {
+    public Datatable getListEmployeeDTO(EmployeeDTO employeeDTO) {
         return employeeRepository.getListEmployeeDTO(employeeDTO);
     }
 

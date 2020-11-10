@@ -1,9 +1,8 @@
 package com.example.repository;
 
+import com.example.config.Datatable;
 import com.example.config.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
-
-import java.util.List;
 
 public interface EmployeeRepository {
 
@@ -15,5 +14,5 @@ public interface EmployeeRepository {
 
     ResultInsideDTO deleteEmployeeById(Long employeeId);
 
-    List<EmployeeDTO> getListEmployeeDTO(EmployeeDTO employeeDTO);
+    Datatable getListEmployeeDTO(EmployeeDTO employeeDTO);
 }
