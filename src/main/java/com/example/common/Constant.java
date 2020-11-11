@@ -1,4 +1,4 @@
-package com.example.config;
+package com.example.common;
 
 public abstract class Constant {
     public static class RESPONSE_KEY {

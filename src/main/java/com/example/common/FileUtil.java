@@ -1,4 +1,4 @@
-package com.example.config;
+package com.example.common;
 
 import org.hibernate.cfg.Environment;
 
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class FileUltil {
+public class FileUtil {
 
     @Resource
     private Environment environment;
@@ -26,7 +26,7 @@ public class FileUltil {
                 return sql;
             }
 
-            InputStream in = FileUltil.class.getClassLoader().getResourceAsStream(filePath);
+            InputStream in = FileUtil.class.getClassLoader().getResourceAsStream(filePath);
             input = new InputStreamReader(in);
             br = new BufferedReader(input);
             String str;

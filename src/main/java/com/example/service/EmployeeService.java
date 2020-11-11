@@ -1,7 +1,7 @@
 package com.example.service;
 
-import com.example.config.Datatable;
-import com.example.config.ResultInsideDTO;
+import com.example.common.Datatable;
+import com.example.common.dto.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 
 import java.util.List;

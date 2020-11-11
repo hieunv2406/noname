@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.config.Datatable;
-import com.example.config.ResultInsideDTO;
+import com.example.common.Datatable;
+import com.example.common.dto.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 import com.example.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;

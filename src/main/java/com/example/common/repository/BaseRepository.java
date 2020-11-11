@@ -1,5 +1,6 @@
-package com.example.config;
+package com.example.common.repository;
 
+import com.example.common.Datatable;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
