@@ -4,6 +4,9 @@ import com.example.config.Datatable;
 import com.example.config.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 
+import java.util.List;
+import java.util.Map;
+
 public interface EmployeeService {
     EmployeeDTO findEmployeeById(Long employeeId);
 
@@ -14,4 +17,6 @@ public interface EmployeeService {
     ResultInsideDTO deleteEmployeeById(Long employeeId);
 
     Datatable getListEmployeeDTO(EmployeeDTO employeeDTO);
+
+    List<Map<String, Object>> getListEmployeeMap();
 }

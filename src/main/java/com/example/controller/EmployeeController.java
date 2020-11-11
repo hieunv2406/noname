@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping(value = "/employeeController")
@@ -44,6 +47,13 @@ public class EmployeeController {
     public ResponseEntity<ResultInsideDTO> deleteEmployeeById(@RequestParam Long employeeId) {
         ResultInsideDTO resultInsideDTO = employeeService.deleteEmployeeById(employeeId);
         return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
+    }
+
+    //Test queryForList
+    @GetMapping(value = "/findAll")
+    public ResponseEntity<List<Map<String,Object>>> getListEmployeeDTO() {
+        List<Map<String,Object>> objectMap = employeeService.getListEmployeeMap();
+        return new ResponseEntity<>(objectMap, HttpStatus.OK);
     }
 
 }

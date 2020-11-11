@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Transactional
@@ -60,6 +61,37 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
                 baseDTO.getParameters(), employeeDTO.getPage(), employeeDTO.getPageSize(),
                 EmployeeDTO.class,
                 employeeDTO.getSortName(), employeeDTO.getSortType());
+    }
+
+    @Override
+    public List<Map<String, Object>> getListEmployeeMap() {
+
+        Map<String, Object> beanMap = new HashMap<>();
+//        beanMap.put("code", "code");
+//        beanMap.put("username", "username");
+//        String sql = " select " +
+//                " e.employee_id employeeId, " +
+//                " e.code code, " +
+//                " e.username username, " +
+//                " e.full_name fullName, " +
+//                " e.email email, " +
+//                " e.birthday birthday, " +
+//                " e.gender gender, " +
+//                " e.address " +
+//                " from " +
+//                " employee e " +
+//                " where " +
+//                " 1 = 1 ";
+                String sql = " select " +
+                " t.cot1 cot1, " +
+                " t.cot2 cot2, " +
+                " t.cot3 cot3 " +
+                " from " +
+                " tabledetest t " +
+                " where " +
+                " 1 = 1 ";
+        List<Map<String, Object>> mapResult = getNamedParameterJdbcTemplate().queryForList(sql,beanMap);
+        return mapResult;
     }
 
     private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {

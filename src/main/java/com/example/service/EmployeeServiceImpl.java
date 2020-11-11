@@ -7,6 +7,9 @@ import com.example.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
@@ -35,6 +38,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Datatable getListEmployeeDTO(EmployeeDTO employeeDTO) {
         return employeeRepository.getListEmployeeDTO(employeeDTO);
+    }
+
+    @Override
+    public List<Map<String, Object>> getListEmployeeMap() {
+
+        return employeeRepository.getListEmployeeMap();
     }
 
 
