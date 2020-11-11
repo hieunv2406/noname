@@ -1,6 +1,8 @@
 package com.example.repository;
 
-import com.example.common.*;
+import com.example.common.Constant;
+import com.example.common.DataUtil;
+import com.example.common.Datatable;
 import com.example.common.dto.BaseDTO;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.common.repository.BaseRepository;
@@ -85,7 +87,7 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
 //                " employee e " +
 //                " where " +
 //                " 1 = 1 ";
-                String sql = " select " +
+        String sql = " select " +
                 " t.cot1 cot1, " +
                 " t.cot2 cot2, " +
                 " t.cot3 cot3 " +
@@ -93,32 +95,66 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
                 " tabledetest t " +
                 " where " +
                 " 1 = 1 ";
-        List<Map<String, Object>> mapResult = getNamedParameterJdbcTemplate().queryForList(sql,beanMap);
+        List<Map<String, Object>> mapResult = getNamedParameterJdbcTemplate().queryForList(sql, beanMap);
         return mapResult;
     }
+
+//    private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {
+//        BaseDTO baseDTO = new BaseDTO();
+//        Map<String, Object> parameter = new HashMap<>();
+//        String sql = " select " +
+//                " e.employee_id employeeId, " +
+//                " e.code code, " +
+//                " e.username username, " +
+//                " e.full_name fullName, " +
+//                " e.email email, " +
+//                " e.birthday birthday, " +
+//                " e.gender gender, " +
+//                " e.address " +
+//                " from " +
+//                " employee e " +
+//                " where " +
+//                " 1 = 1 ";
+//        if (employeeDTO != null) {
+//            if (!DataUtil.isNullOrEmpty(employeeDTO.getCode())) {
+//                sql += " And e.code = :code ";
+//                parameter.put("code", employeeDTO.getCode());
+//            }
+//            if (!DataUtil.isNullOrEmpty(employeeDTO.getUsername())) {
+//                sql += " And e.username = :username ";
+//                parameter.put("username", employeeDTO.getUsername());
+//            }
+//            if (!DataUtil.isNullOrEmpty(employeeDTO.getGender())) {
+//                sql += " And e.gender = :gender ";
+//                parameter.put("gender", employeeDTO.getGender());
+//            }
+//        }
+//        sql += " ORDER BY e.employee_id ASC ";
+//        baseDTO.setSqlQuery(sql);
+//        baseDTO.setParameters(parameter);
+//        return baseDTO;
+//    }
 
     private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {
         BaseDTO baseDTO = new BaseDTO();
         Map<String, Object> parameter = new HashMap<>();
-        String sql = " select " +
-                " e.employee_id employeeId, " +
-                " e.code code, " +
-                " e.username username, " +
-                " e.full_name fullName, " +
-                " e.email email, " +
-                " e.birthday birthday, " +
-                " e.gender gender, " +
-                " e.address " +
-                " from " +
-                " employee e " +
-                " where " +
-                " 1 = 1 ";
+        StringBuilder stringBuilder = getSQLQueryFromFile(null, "getEmployeeDTO.sql");
+        String sql = null;
         if (employeeDTO != null) {
-            if (employeeDTO.getCode() != null) {
+            if (!DataUtil.isNullOrEmpty(employeeDTO.getCode())) {
                 sql += " And e.code = :code ";
                 parameter.put("code", employeeDTO.getCode());
             }
+            if (!DataUtil.isNullOrEmpty(employeeDTO.getUsername())) {
+                sql += " And e.username = :username ";
+                parameter.put("username", employeeDTO.getUsername());
+            }
+            if (!DataUtil.isNullOrEmpty(employeeDTO.getGender())) {
+                sql += " And e.gender = :gender ";
+                parameter.put("gender", employeeDTO.getGender());
+            }
         }
+        sql += " ORDER BY e.employee_id ASC ";
         baseDTO.setSqlQuery(sql);
         baseDTO.setParameters(parameter);
         return baseDTO;

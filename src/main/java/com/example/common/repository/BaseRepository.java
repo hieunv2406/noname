@@ -1,6 +1,7 @@
 package com.example.common.repository;
 
 import com.example.common.Datatable;
+import com.example.common.FileUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -9,6 +10,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -166,6 +171,38 @@ public abstract class BaseRepository<T> {
             query.setParameter(entry.getKey(), entry.getValue());
         }
         return query.getResultList();
+    }
+
+    public StringBuilder getSQLQueryFromFile(String filePath, String fileName) {
+        StringBuilder stringBuilder = null;
+        BufferedReader bufferedReader = null;
+        InputStreamReader inputStreamReader = null;
+        try {
+//            if (filePath == null || filePath.equals("")) {
+//                return stringBuilder;
+//            }
+
+            InputStream inputStream = FileUtil.class.getClassLoader().getResourceAsStream(fileName);
+            inputStreamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
+            String str;
+            stringBuilder = new StringBuilder("");
+            while ((str = bufferedReader.readLine()) != null) {
+                stringBuilder.append(str);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bufferedReader != null)
+                    bufferedReader.close();
+                if (inputStreamReader != null)
+                    inputStreamReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return stringBuilder;
     }
 
 }
