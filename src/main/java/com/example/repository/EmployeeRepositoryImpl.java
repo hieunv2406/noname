@@ -99,47 +99,10 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
         return mapResult;
     }
 
-//    private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {
-//        BaseDTO baseDTO = new BaseDTO();
-//        Map<String, Object> parameter = new HashMap<>();
-//        String sql = " select " +
-//                " e.employee_id employeeId, " +
-//                " e.code code, " +
-//                " e.username username, " +
-//                " e.full_name fullName, " +
-//                " e.email email, " +
-//                " e.birthday birthday, " +
-//                " e.gender gender, " +
-//                " e.address " +
-//                " from " +
-//                " employee e " +
-//                " where " +
-//                " 1 = 1 ";
-//        if (employeeDTO != null) {
-//            if (!DataUtil.isNullOrEmpty(employeeDTO.getCode())) {
-//                sql += " And e.code = :code ";
-//                parameter.put("code", employeeDTO.getCode());
-//            }
-//            if (!DataUtil.isNullOrEmpty(employeeDTO.getUsername())) {
-//                sql += " And e.username = :username ";
-//                parameter.put("username", employeeDTO.getUsername());
-//            }
-//            if (!DataUtil.isNullOrEmpty(employeeDTO.getGender())) {
-//                sql += " And e.gender = :gender ";
-//                parameter.put("gender", employeeDTO.getGender());
-//            }
-//        }
-//        sql += " ORDER BY e.employee_id ASC ";
-//        baseDTO.setSqlQuery(sql);
-//        baseDTO.setParameters(parameter);
-//        return baseDTO;
-//    }
-
     private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {
         BaseDTO baseDTO = new BaseDTO();
         Map<String, Object> parameter = new HashMap<>();
-        StringBuilder stringBuilder = getSQLQueryFromFile(null, "getEmployeeDTO.sql");
-        String sql = null;
+        String sql = getSQLQueryFromFile("employee", "getEmployeeDTO");
         if (employeeDTO != null) {
             if (!DataUtil.isNullOrEmpty(employeeDTO.getCode())) {
                 sql += " And e.code = :code ";

@@ -173,22 +173,19 @@ public abstract class BaseRepository<T> {
         return query.getResultList();
     }
 
-    public StringBuilder getSQLQueryFromFile(String filePath, String fileName) {
+    public String getSQLQueryFromFile(String resourceFolder, String fileName) {
         StringBuilder stringBuilder = null;
         BufferedReader bufferedReader = null;
         InputStreamReader inputStreamReader = null;
         try {
-//            if (filePath == null || filePath.equals("")) {
-//                return stringBuilder;
-//            }
-
-            InputStream inputStream = FileUtil.class.getClassLoader().getResourceAsStream(fileName);
+            String filePath = "sql/" + resourceFolder + "/" + fileName + ".sql";
+            InputStream inputStream = FileUtil.class.getClassLoader().getResourceAsStream(filePath);
             inputStreamReader = new InputStreamReader(inputStream);
             bufferedReader = new BufferedReader(inputStreamReader);
             String str;
-            stringBuilder = new StringBuilder("");
+            stringBuilder = new StringBuilder();
             while ((str = bufferedReader.readLine()) != null) {
-                stringBuilder.append(str);
+                stringBuilder.append(str + " ");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -202,7 +199,7 @@ public abstract class BaseRepository<T> {
                 e.printStackTrace();
             }
         }
-        return stringBuilder;
+        return stringBuilder.toString();
     }
 
 }
