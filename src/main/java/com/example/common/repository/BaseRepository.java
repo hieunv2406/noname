@@ -4,17 +4,17 @@ import com.example.common.Datatable;
 import com.example.common.FileUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,6 +200,21 @@ public abstract class BaseRepository<T> {
             }
         }
         return stringBuilder.toString();
+    }
+
+    public String getSQLFromFile(String resourceFolder, String fileName) {
+        File folder;
+        try {
+            folder = new ClassPathResource("sql" + File.separator + resourceFolder + File.separator + fileName + ".sql").getFile();
+
+            if (folder.isFile()) {
+                String sql = new String(Files.readAllBytes(Paths.get(folder.getAbsolutePath())));
+                return sql;
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return null;
     }
 
 }

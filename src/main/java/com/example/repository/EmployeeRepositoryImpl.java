@@ -102,7 +102,7 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
     private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {
         BaseDTO baseDTO = new BaseDTO();
         Map<String, Object> parameter = new HashMap<>();
-        String sql = getSQLQueryFromFile("employee", "getEmployeeDTO");
+        String sql = getSQLFromFile("employee", "getEmployeeDTO");
         if (employeeDTO != null) {
             if (!DataUtil.isNullOrEmpty(employeeDTO.getCode())) {
                 sql += " And e.code = :code ";
