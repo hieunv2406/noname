@@ -32,6 +32,9 @@ public class ConfigFileExport {
     private String firstRightHeaderTitle;
     private String secondRightHeaderTitle;
     private List<CellConfigExport> lstCellMerge;
+    private String[] customTitle;
+    private String[] customColumnWidth;
+    private String[] customColumnWidthNoMerge;
     private List<Integer> lstColumnHidden;
     private boolean isAutoSize;
     private Map<Integer, Integer> mapCustomColumnWidth;

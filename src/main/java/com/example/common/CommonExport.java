@@ -2,11 +2,20 @@ package com.example.common;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class CommonExport {
@@ -40,8 +49,33 @@ public class CommonExport {
         HSSFWorkbook hssfWorkbook = null;
         try {
             log.info("Start get template file!");
+//        pathTemplate = StringUtils.removeSeparator(pathTemplate);
+            Resource resource = new ClassPathResource(pathTemplate);
+            InputStream fileTemplate = resource.getInputStream();
+            XSSFWorkbook workbookTemp = new XSSFWorkbook(fileTemplate);
+            log.info("End get template file!");
+            SXSSFWorkbook workbook = new SXSSFWorkbook(workbookTemp,1000);
+            hssfWorkbook = new HSSFWorkbook();
 
+            // <editor-fold defaultstate="collapsed" desc="Declare style">
 
+            // </editor-fold>
+
+            for (ConfigFileExport item: config){
+                Map<String, String> fieldSpit = item.getFieldSplit();
+                SXSSFSheet sheet;
+                if (exportChart != null && exportChart.length > 0){
+                    sheet = workbook.getSheetAt(0);
+                }else {
+                    sheet = workbook.createSheet(item.getSheetName());
+                }
+                //title
+                Row rowMainTitle = sheet.createRow(item.getCellTitleIndex());
+                Cell cellMainTitle;
+                if (item.getCustomTitle() != null && item.getCustomTitle().length>0){
+
+                }
+            }
         } catch (Exception e) {
 
         }
