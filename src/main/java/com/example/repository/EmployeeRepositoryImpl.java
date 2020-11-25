@@ -8,6 +8,7 @@ import com.example.common.dto.ResultInsideDTO;
 import com.example.common.repository.BaseRepository;
 import com.example.data.dto.EmployeeDTO;
 import com.example.data.entity.EmployeeEntity;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,24 +70,17 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
     }
 
     @Override
+    public List<EmployeeDTO> getListDataExport(EmployeeDTO employeeDTO) {
+        BaseDTO baseDTO = sqlSearch(employeeDTO);
+        return getNamedParameterJdbcTemplate().query(baseDTO.getSqlQuery()
+                , baseDTO.getParameters()
+                , BeanPropertyRowMapper.newInstance(EmployeeDTO.class));
+    }
+
+    @Override
     public List<Map<String, Object>> getListEmployeeMap() {
 
         Map<String, Object> beanMap = new HashMap<>();
-//        beanMap.put("code", "code");
-//        beanMap.put("username", "username");
-//        String sql = " select " +
-//                " e.employee_id employeeId, " +
-//                " e.code code, " +
-//                " e.username username, " +
-//                " e.full_name fullName, " +
-//                " e.email email, " +
-//                " e.birthday birthday, " +
-//                " e.gender gender, " +
-//                " e.address " +
-//                " from " +
-//                " employee e " +
-//                " where " +
-//                " 1 = 1 ";
         String sql = " select " +
                 " t.cot1 cot1, " +
                 " t.cot2 cot2, " +

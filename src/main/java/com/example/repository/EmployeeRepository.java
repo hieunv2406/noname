@@ -19,5 +19,7 @@ public interface EmployeeRepository {
 
     Datatable getListEmployeeDTO(EmployeeDTO employeeDTO);
 
+    List<EmployeeDTO> getListDataExport(EmployeeDTO employeeDTO);
+
     List<Map<String, Object>> getListEmployeeMap();
 }

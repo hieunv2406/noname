@@ -1,4 +1,4 @@
-package com.example.service;
+package com.example.business;
 
 import com.example.common.Datatable;
 import com.example.common.dto.ResultInsideDTO;
@@ -7,7 +7,7 @@ import com.example.data.dto.EmployeeDTO;
 import java.util.List;
 import java.util.Map;
 
-public interface EmployeeService {
+public interface EmployeeBusiness {
     EmployeeDTO findEmployeeById(Long employeeId);
 
     ResultInsideDTO insertEmployee(EmployeeDTO employeeDTO);
@@ -19,4 +19,7 @@ public interface EmployeeService {
     Datatable getListEmployeeDTO(EmployeeDTO employeeDTO);
 
     List<Map<String, Object>> getListEmployeeMap();
+
+    List<EmployeeDTO> getListDataExport(EmployeeDTO employeeDTO);
+
 }
