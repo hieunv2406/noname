@@ -1,6 +1,8 @@
 package com.example.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -8,7 +10,9 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class configFileExport {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ConfigFileExport {
     private List lstData;
     private String sheetName;
     private String title;
@@ -32,29 +36,22 @@ public class configFileExport {
     private boolean isAutoSize;
     private Map<Integer, Integer> mapCustomColumnWidth;
 
-    public configFileExport(
-            List lstData,
-            String sheetName,
-            String title,
-            String subTitle,
-            int startRow,
-            int cellTitleIndex,
-            int mergeTitleEndIndex,
-            boolean createHeader,
-            String headerPrefix,
-            List<ConfigHeaderExport> header,
-            Map<String, String> fieldSplit,
-            String splitChar,
-            List<CellConfigExport> lstCreateCell,
-            String langKey,
-            String firstLeftHeaderTitle,
-            String secondLeftHeaderTitle,
-            String firstRightHeaderTitle,
-            String secondRightHeaderTitle,
-            List<CellConfigExport> lstCellMerge,
-            List<Integer> lstColumnHidden,
-            boolean isAutoSize,
-            Map<Integer, Integer> mapCustomColumnWidth
+    public ConfigFileExport(List lstData
+            , String sheetName
+            , String title
+            , String subTitle
+            , int startRow
+            , int cellTitleIndex
+            , int mergeTitleEndIndex
+            , boolean createHeader
+            , String headerPrefix
+            , List<ConfigHeaderExport> header
+            , Map<String, String> fieldSplit
+            , String splitChar
+            , String firstLeftHeaderTitle
+            , String secondLeftHeaderTitle
+            , String firstRightHeaderTitle
+            , String secondRightHeaderTitle
     ) {
         this.lstData = lstData;
         this.sheetName = sheetName;
@@ -68,15 +65,9 @@ public class configFileExport {
         this.header = header;
         this.fieldSplit = fieldSplit;
         this.splitChar = splitChar;
-        this.lstCreateCell = lstCreateCell;
-        this.langKey = langKey;
         this.firstLeftHeaderTitle = firstLeftHeaderTitle;
         this.secondLeftHeaderTitle = secondLeftHeaderTitle;
         this.firstRightHeaderTitle = firstRightHeaderTitle;
         this.secondRightHeaderTitle = secondRightHeaderTitle;
-        this.lstCellMerge = lstCellMerge;
-        this.lstColumnHidden = lstColumnHidden;
-        this.isAutoSize = isAutoSize;
-        this.mapCustomColumnWidth = mapCustomColumnWidth;
     }
 }

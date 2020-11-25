@@ -4,6 +4,7 @@ import com.example.common.Datatable;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -21,5 +22,7 @@ public interface EmployeeBusiness {
     List<Map<String, Object>> getListEmployeeMap();
 
     List<EmployeeDTO> getListDataExport(EmployeeDTO employeeDTO);
+
+    File exportData(EmployeeDTO employeeDTO) throws Exception;
 
 }
