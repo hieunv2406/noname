@@ -2,15 +2,18 @@ package com.example.data.dto;
 
 import com.example.common.dto.BaseDTO;
 import com.example.data.entity.EmployeeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class EmployeeDTO extends BaseDTO {
 
     private Long employeeId;
@@ -21,6 +24,7 @@ public class EmployeeDTO extends BaseDTO {
     private Date birthday;
     private Long gender;
     private String address;
+    private MultipartFile file;
 
     public EmployeeDTO(Long employeeId, String code, String username, String fullName, String email, Date birthday, Long gender, String address) {
         this.employeeId = employeeId;

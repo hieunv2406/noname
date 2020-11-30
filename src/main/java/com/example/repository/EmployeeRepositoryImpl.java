@@ -93,7 +93,8 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
         return mapResult;
     }
 
-    private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {
+    private BaseDTO sqlSearch(EmployeeDTO employeeDTO)
+    {
         BaseDTO baseDTO = new BaseDTO();
         Map<String, Object> parameter = new HashMap<>();
         String sql = getSQLFromFile("employee", "getEmployeeDTO");
@@ -103,8 +104,8 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
                 parameter.put("code", employeeDTO.getCode());
             }
             if (!DataUtil.isNullOrEmpty(employeeDTO.getUsername())) {
-                sql += " And e.username = :username ";
-                parameter.put("username", employeeDTO.getUsername());
+                sql += " And lower(e.username) Like lower(:username) ";
+                parameter.put("username", DataUtil.convertSqlLike(employeeDTO.getUsername()));
             }
             if (!DataUtil.isNullOrEmpty(employeeDTO.getGender())) {
                 sql += " And e.gender = :gender ";
