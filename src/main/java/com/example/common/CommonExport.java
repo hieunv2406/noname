@@ -13,14 +13,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 public class CommonExport {
@@ -31,6 +27,7 @@ public class CommonExport {
     public static final String XLSM_FILE_EXTENTION = ".xlsm";
     public static final String PDF_FILE_EXTENTION = ".pdf";
     public static final String XLS_FILE_EXTENTION = ".xls";
+    private static Object workbook;
 
     public static File exportExcel(
             String pathTemplate,
@@ -43,6 +40,7 @@ public class CommonExport {
         if (!folderOut.exists()) {
             folderOut.mkdir();
         }
+        //cắt tên file + thời gian
         SimpleDateFormat dateFormat = new SimpleDateFormat();
         dateFormat.applyPattern("dd/MM/yyy HH:mm:ss");
         String strCurTimeExp = dateFormat.format(new Date());
@@ -52,14 +50,17 @@ public class CommonExport {
         pathOut = pathOut + fileNameOut + strCurTimeExp
                 + (exportChart != null && exportChart.length > 0 ? XLSM_FILE_EXTENTION : XLSX_FILE_EXTENTION);
         HSSFWorkbook hssfWorkbook = null;
+        XSSFWorkbook workbookTemp = null;
+        SXSSFWorkbook workbook = null;
+        InputStream fileTemplate = null;
         try {
             log.info("Start get template file!");
-//        pathTemplate = StringUtils.removeSeparator(pathTemplate);
+            pathTemplate = DataUtil.replaceSeparator(pathTemplate);
             Resource resource = new ClassPathResource(pathTemplate);
-            InputStream fileTemplate = resource.getInputStream();
-            XSSFWorkbook workbookTemp = new XSSFWorkbook(fileTemplate);
+            fileTemplate = resource.getInputStream();
+            workbookTemp = new XSSFWorkbook(fileTemplate);
             log.info("End get template file!");
-            SXSSFWorkbook workbook = new SXSSFWorkbook(workbookTemp, 1000);
+            workbook = new SXSSFWorkbook(workbookTemp, 1000);
             hssfWorkbook = new HSSFWorkbook();
 
             // <editor-fold defaultstate="collapsed" desc="Declare style">
@@ -233,28 +234,92 @@ public class CommonExport {
                     List<ConfigHeaderExport> listHeader = item.getHeader();
                     int startRow = item.getStartRow();
                     String splitChar = item.getSplitChar();
-                    for (int i=0; i< listData.size(); i++){
-                        row = sheet.createRow(i + startRow+1+indexRowData);
+                    for (int i = 0; i < listData.size(); i++) {
+                        row = sheet.createRow(i + startRow + 1 + indexRowData);
                         row.setHeight((short) 250);
                         Cell cell;
 
                         cell = row.createCell(0);
-                        cell.setCellValue(i+1);
+                        cell.setCellValue(i + 1);
 //                        cell.setCellStyle();
                         int j = 0;
-                        for (int e = 0; e< listHeader.size();e++){
+                        for (int e = 0; e < listHeader.size(); e++) {
                             ConfigHeaderExport head = listHeader.get(e);
                             String header = head.getFieldName();
                             String align = head.getAlign();
                             Object obj = listData.get(i);
 
                             Field f = mapField.get(header);
-                            if (!DataUtil.isNullOrEmpty(fieldSpit) && fieldSpit.containsKey(header)){
+                            if (!DataUtil.isNullOrEmpty(fieldSpit) && fieldSpit.containsKey(header)) {
                                 String[] arrHead = fieldSpit.get(header).split(splitChar);
                                 String value = "";
                                 Object tempValue = f.get(obj);
-                                if (tempValue instanceof Date){
-//                                    value = tempValue == null ? "": tempValue;
+                                if (tempValue instanceof Date) {
+                                    value = DataUtil.isNullOrEmpty(tempValue) ? "" : DataUtil.convertDateToString((Date) tempValue);
+                                } else {
+                                    value = DataUtil.isNullOrEmpty(tempValue) ? "" : tempValue.toString();
+                                }
+                                String[] fieldSplitValue = value.split(splitChar);
+                                for (int m = 0; m < arrHead.length; m++) {
+                                    if (head.isHasMerge() && head.getSubHeader().length > 0) {
+                                        int s = 0;
+                                        for (String sub : head.getSubHeader()) {
+                                            cell = row.createCell(j + 1);
+                                            String[] replate = head.getReplace();
+                                            if (!DataUtil.isNullOrEmpty(replate)) {
+                                                List<String> more = new ArrayList<>();
+                                                if (replate.length > 2) {
+                                                    for (int n = 2; n < replate.length; n++) {
+                                                        Object objStr = mapField.get(replate[n]).get(obj);
+                                                        String valueStr = objStr == null ? "" : objStr.toString();
+                                                        more.add(valueStr);
+                                                    }
+                                                }
+//                                                if ("NUMBER".equals(head.getStyleFormat())) {
+//                                                    double numberValue = replateNumberValue(replate[0], m, more, s);
+//                                                    if () {
+//
+//                                                    } else if () {
+//
+//                                                    } else {
+//
+//                                                    }
+//                                                } else {
+//
+//                                                }
+                                                s++;
+                                            }
+//                                            else {
+//                                                for () {
+//                                                    if () {
+//
+//                                                    }
+//                                                }
+//                                                if () {
+//                                                    if () {
+//
+//                                                    } else {
+//
+//                                                    }
+//                                                } else {
+//                                                    if () {
+//
+//                                                    } else if () {
+//
+//                                                    } else {
+//
+//                                                    }
+//                                                }
+//                                            }
+                                            j++;
+                                        }
+                                    }
+//                                    else {
+//
+//                                    }
+//                                if (!DataUtil.isNullOrEmpty(item.getCustomColumnWidth()) && item.getCustomColumnWidth().length>0){
+//
+//                                }
                                 }
                             }
                         }
@@ -262,11 +327,64 @@ public class CommonExport {
                 }
                 // </editor-fold>
 
+                // <editor-fold defaultstate="collapsed" desc="Merge row">
 
+                // </editor-fold>
+
+                // <editor-fold defaultstate="collapsed" desc="Auto size column">
+
+                // </editor-fold>
             }
-        } catch (Exception e) {
-
+            try {
+                FileOutputStream fileOut = new FileOutputStream(pathOut);
+                workbook.write(fileOut);
+                fileOut.flush();
+                fileOut.close();
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            if (hssfWorkbook != null) {
+                try {
+                    hssfWorkbook.close();
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
+            if (workbookTemp != null) {
+                try {
+                    workbookTemp.close();
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
+            if (fileTemplate != null) {
+                try {
+                    fileTemplate.close();
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
         }
-        return null;
+        return new File(pathOut);
+    }
+
+    public static double replateNumberValue(String modul, Object valueReplace, List<String> more, int index) {
+        double valueReturn = 0;
+        return valueReturn;
+    }
+
+    public static String replateStringValue(String modul, Object valueReplace, List<String> more, int index) {
+        String valueReturn = "";
+        return valueReturn;
     }
 }

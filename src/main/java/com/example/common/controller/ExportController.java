@@ -5,7 +5,7 @@ import com.example.common.service.FilesStorageService;
 import com.example.data.dto.EmployeeDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletContext;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.FileInputStream;
 
 @Log4j2
 @RestController
@@ -31,24 +30,23 @@ public class ExportController {
     @Autowired
     private EmployeeBusiness employeeBusiness;
 
-//    @GetMapping("/files/{key}")
-//    public ResponseEntity<Resource> getFile(@PathVariable("key") String key) throws Exception {
-//        switch (key){
-//            case "EMPLOYEE_MANAGER" :
-//                EmployeeDTO employeeDTO = new EmployeeDTO();
-//                file =  employeeBusiness.exportData(employeeDTO);
-//                break;
-//            default:
-//        }
-//        Path path = filesStorageService.load(file.get)
-//        byte[] data = Files.readAllBytes(path);
-//        ByteArrayResource resource = new ByteArrayResource(data);
-//        MediaType mediaType = getMediaTypeForFileName(servletContext, fileName);
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-//                .contentType(mediaType)
-//                .body(resource);
-//    }
+    @GetMapping("/files/{key}")
+    public ResponseEntity<Resource> getFile(@PathVariable("key") String key) throws Exception {
+        File file = null;
+        switch (key) {
+            case "EMPLOYEE_MANAGER":
+                EmployeeDTO employeeDTO = new EmployeeDTO();
+                file = employeeBusiness.exportData(employeeDTO);
+                break;
+            default:
+        }
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        MediaType mediaType = getMediaTypeForFileName(servletContext, file.getName());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .contentType(mediaType)
+                .body(resource);
+    }
 
     private MediaType getMediaTypeForFileName(ServletContext servletContext, String fileName) {
         String mineType = servletContext.getMimeType(fileName);

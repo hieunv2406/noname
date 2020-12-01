@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 public class DataUtil {
 
@@ -48,18 +49,27 @@ public class DataUtil {
         return "%" + obj + "%";
     }
 
-    public String convertDateToString(Date date) {
+    public static String convertDateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return dateFormat.format(date);
     }
 
-    public String dateToString(Date date) {
+    public static String dateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(date);
     }
 
-    public Date stringToDate(String date) throws ParseException {
+    public static Date stringToDate(String date) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.parse(date);
+    }
+
+    public static String removeSeparator(String url) {
+        int index = url.lastIndexOf("\\");
+        return url.substring(index + 1, url.length());
+    }
+
+    public static String replaceSeparator(String url) {
+        return url.replaceAll( Matcher.quoteReplacement("\\"), "/");
     }
 }

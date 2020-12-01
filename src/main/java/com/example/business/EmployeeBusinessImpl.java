@@ -62,7 +62,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
     @Override
     public File exportData(EmployeeDTO employeeDTO) throws Exception {
         List<EmployeeDTO> employeeDTOList = employeeRepository.getListDataExport(employeeDTO);
-        return exportTemplate(employeeDTOList,"EXPORT");
+        return exportTemplate(employeeDTOList, "EXPORT");
     }
 
     private File exportTemplate(List<EmployeeDTO> dtoList, String key) throws Exception {
