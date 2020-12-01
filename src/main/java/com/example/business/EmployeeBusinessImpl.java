@@ -110,7 +110,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                 "TIEU DE DUOI BEN TRAI",
                 "TIEU DE BEN PHAI",
                 "TIEU DE DUOI BEN PHAI");
-        configFileExport.setLangKey("vi_VN");
+        configFileExport.setLangKey("i18n/vi_VN");
         List<CellConfigExport> lstCellSheet = new ArrayList<>();
         CellConfigExport cellSheet;
         cellSheet = new CellConfigExport(7,
