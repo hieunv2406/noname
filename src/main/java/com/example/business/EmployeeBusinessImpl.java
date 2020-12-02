@@ -4,18 +4,23 @@ import com.example.common.*;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 import com.example.repository.EmployeeRepository;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.*;
 
-@Log4j2
+@Slf4j
 @Service
 public class EmployeeBusinessImpl implements EmployeeBusiness {
     @Autowired
-    EmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public EmployeeDTO findEmployeeById(Long employeeId) {
@@ -106,11 +111,12 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                 headerExportList,
                 fieldSplit,
                 "",
-                I18n.getFieldLanguage("language.common.firstLeftHeaderTitle", null),
-                "TIEU DE DUOI BEN TRAI",
-                "TIEU DE BEN PHAI",
-                "TIEU DE DUOI BEN PHAI");
-        configFileExport.setLangKey("i18n/vi_VN");
+                messageSource.getMessage("language.common.firstLeftHeaderTitle", null, locale),
+                messageSource.getMessage("language.common.secondLeftHeaderTitle", null, locale),
+                messageSource.getMessage("language.common.firstRightHeaderTitle", null, locale),
+                messageSource.getMessage("language.common.secondRightHeaderTitle", null, locale));
+//                null, null, null, null);
+        configFileExport.setLangKey("i18n/vi");
         List<CellConfigExport> lstCellSheet = new ArrayList<>();
         CellConfigExport cellSheet;
         cellSheet = new CellConfigExport(7,

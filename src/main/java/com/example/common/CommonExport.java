@@ -10,6 +10,7 @@ import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -21,6 +22,7 @@ import java.util.*;
 @Slf4j
 public class CommonExport {
 
+    private final static Locale locale = LocaleContextHolder.getLocale();
     public static final String XLSX_FILE_EXTENTION = ".xlsx";
     public static final String DOC_FILE_EXTENTION = ".doc";
     public static final String DOCX_FILE_EXTENTION = ".docx";

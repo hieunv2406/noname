@@ -1,4 +1,4 @@
-package com.example.common.service;
+package com.example.common;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
