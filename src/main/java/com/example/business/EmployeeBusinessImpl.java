@@ -102,11 +102,11 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                 3,
                 9,
                 true,
-                "",
+                "language.employee",
                 headerExportList,
                 fieldSplit,
                 "",
-                "TIEU DE BEN TRAI",
+                I18n.getFieldLanguage("language.common.firstLeftHeaderTitle", null),
                 "TIEU DE DUOI BEN TRAI",
                 "TIEU DE BEN PHAI",
                 "TIEU DE DUOI BEN PHAI");

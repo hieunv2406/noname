@@ -6,17 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.aspectj.lang.annotation.RequiredTypes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+//@RequiredTypes()
 public class EmployeeDTO extends BaseDTO {
 
     private Long employeeId;
+    @NotNull(message = "code is not null")
     private String code;
     private String username;
     private String fullName;
