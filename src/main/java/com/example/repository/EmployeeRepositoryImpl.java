@@ -1,8 +1,8 @@
 package com.example.repository;
 
 import com.example.common.Constant;
-import com.example.common.DataUtil;
-import com.example.common.Datatable;
+import com.example.common.utils.DataUtil;
+import com.example.common.dto.Datatable;
 import com.example.common.dto.BaseDTO;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.common.repository.BaseRepository;

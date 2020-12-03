@@ -1,7 +1,7 @@
 package com.example.common.repository;
 
-import com.example.common.Datatable;
-import com.example.common.FileUtil;
+import com.example.common.dto.Datatable;
+import com.example.common.utils.FileUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;

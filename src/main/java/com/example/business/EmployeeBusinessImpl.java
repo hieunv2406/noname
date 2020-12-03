@@ -1,13 +1,15 @@
 package com.example.business;
 
 import com.example.common.*;
+import com.example.common.config.CellConfigExport;
+import com.example.common.config.ConfigFileExport;
+import com.example.common.config.ConfigHeaderExport;
+import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 import com.example.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -18,9 +20,6 @@ import java.util.*;
 public class EmployeeBusinessImpl implements EmployeeBusiness {
     @Autowired
     private EmployeeRepository employeeRepository;
-    @Autowired
-    private MessageSource messageSource;
-    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public EmployeeDTO findEmployeeById(Long employeeId) {
@@ -76,7 +75,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
         String sheetName = "Employee_export_title_test";
         String title = "Employee_export_title_test";
         List<ConfigFileExport> fileExportList = new ArrayList<>();
-        List<ConfigHeaderExport> headerExportList = new ArrayList<>();
+        List<ConfigHeaderExport> headerExportList;
         if ("RESULT_IMPORT".equalsIgnoreCase(key)) {
             headerExportList = readerHeaderSheet("code"
                     , "username"
@@ -111,11 +110,10 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                 headerExportList,
                 fieldSplit,
                 "",
-                messageSource.getMessage("language.common.firstLeftHeaderTitle", null, locale),
-                messageSource.getMessage("language.common.secondLeftHeaderTitle", null, locale),
-                messageSource.getMessage("language.common.firstRightHeaderTitle", null, locale),
-                messageSource.getMessage("language.common.secondRightHeaderTitle", null, locale));
-//                null, null, null, null);
+                I18n.getLanguage("language.common.firstLeftHeaderTitle", null),
+                I18n.getLanguage("language.common.secondLeftHeaderTitle", null),
+                I18n.getLanguage("language.common.firstRightHeaderTitle", null),
+                I18n.getLanguage("language.common.secondRightHeaderTitle", null));
         configFileExport.setLangKey("i18n/vi");
         List<CellConfigExport> lstCellSheet = new ArrayList<>();
         CellConfigExport cellSheet;

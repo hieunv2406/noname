@@ -1,6 +1,6 @@
 package com.example.business;
 
-import com.example.common.Datatable;
+import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 

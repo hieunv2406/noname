@@ -1,5 +1,8 @@
 package com.example.common;
 
+import com.example.common.config.ConfigFileExport;
+import com.example.common.config.ConfigHeaderExport;
+import com.example.common.utils.DataUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -130,7 +133,7 @@ public class CommonExport {
                                             int s = 0;
                                             for (String sub : header.getSubHeader()) {
                                                 Cell cellHeaderSub1 = rowHeaderSub.createCell(k);
-                                                cellHeaderSub1.setCellValue(I18n.getFieldLanguage(item.getHeaderPrefix() + "." + sub, null));
+                                                cellHeaderSub1.setCellValue(I18n.getLanguage(item.getHeaderPrefix() + "." + sub, null));
                                                 k++;
                                                 s++;
                                             }
@@ -141,7 +144,7 @@ public class CommonExport {
                                 }
                             } else {
                                 cellHeader = rowHeader.createCell(index + 2);
-                                cellHeader.setCellValue(I18n.getFieldLanguage(item.getHeaderPrefix() + "." + header.getFieldName(), null));
+                                cellHeader.setCellValue(I18n.getLanguage(item.getHeaderPrefix() + "." + header.getFieldName(), null));
                                 if (header.isHasMerge()) {
                                     CellRangeAddress cellRangeAddress = new CellRangeAddress(
                                             item.getStartRow(), item.getStartRow() + header.getMergeRow(),

@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.business.EmployeeBusiness;
-import com.example.common.Datatable;
+import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.data.dto.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
