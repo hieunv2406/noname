@@ -38,9 +38,9 @@ public abstract class BaseRepository<T> {
     public Datatable getListDataTableBySqlQuery(String sqlQuery, Map<String, Object> parameters,
                                                 int page, int pageSize, Class<?> mappedClass, String sortName, String sortType) {
         Datatable dataReturn = new Datatable();
-        String sqlQueryResult = " SELECT * FROM ( SELECT * FROM ( SELECT *, a.rownum indexRow FROM ( SELECT *, @rownum := @rownum + 1 as rownum FROM ( "
+        String sqlQueryResult = " SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( "
                 + sqlQuery
-                + " ) c , (select @rownum := 0) r ";
+                + " ) abc ";
         if (sortName != null) {
             Field[] fields = FieldUtils.getAllFields(mappedClass);
             Map<String, String> mapField = new HashMap<>();
@@ -55,13 +55,12 @@ public abstract class BaseRepository<T> {
                 sqlQueryResult += " ORDER BY " + mapField.get(sortName);
             }
         }
-        sqlQueryResult += " ) a WHERE a.rownum < ((:p_page_number * :p_page_length) + 1 )) b WHERE b.indexRow >= (((:p_page_number-1) * :p_page_length) + 1) "
-                + " ) T_TABLE_NAME, ";
+        sqlQueryResult += " ) bcd LIMIT :p_page_length offset :p_page_number ) T_TABLE_NAME, ";
         sqlQueryResult += " ( SELECT COUNT(*) totalRow FROM ( "
                 + sqlQuery
                 + " ) T_TABLE_TOTAL ) ";
         sqlQueryResult += "T_TABLE_NAME_TOTAL ";
-        parameters.put("p_page_number", page);
+        parameters.put("p_page_number", (page - 1) * pageSize);
         parameters.put("p_page_length", pageSize);
         List<?> list = getNamedParameterJdbcTemplate().query(sqlQueryResult, parameters, BeanPropertyRowMapper.newInstance(mappedClass));
         int count = 0;
@@ -90,6 +89,63 @@ public abstract class BaseRepository<T> {
         dataReturn.setData(list);
         return dataReturn;
     }
+
+    //Mysql dự phòng
+    //    public Datatable getListDataTableBySqlQuery(String sqlQuery, Map<String, Object> parameters,
+//                                                int page, int pageSize, Class<?> mappedClass, String sortName, String sortType) {
+//        Datatable dataReturn = new Datatable();
+//        String sqlQueryResult = " SELECT * FROM ( SELECT * FROM ( SELECT *, a.rownum indexRow FROM ( SELECT *, @rownum := @rownum + 1 as rownum FROM ( "
+//                + sqlQuery
+//                + " ) c , (select @rownum := 0) r ";
+//        if (sortName != null) {
+//            Field[] fields = FieldUtils.getAllFields(mappedClass);
+//            Map<String, String> mapField = new HashMap<>();
+//            for (Field field : fields) {
+//                mapField.put(field.getName(), field.getName());
+//            }
+//            if ("asc".equalsIgnoreCase(sortType)) {
+//                sqlQueryResult += " ORDER BY " + mapField.get(sortName) + " ASC";
+//            } else if ("desc".equalsIgnoreCase(sortType)) {
+//                sqlQueryResult += " ORDER BY " + mapField.get(sortName) + " DESC";
+//            } else {
+//                sqlQueryResult += " ORDER BY " + mapField.get(sortName);
+//            }
+//        }
+//        sqlQueryResult += " ) a WHERE a.rownum < ((:p_page_number * :p_page_length) + 1 )) b WHERE b.indexRow >= (((:p_page_number-1) * :p_page_length) + 1) "
+//                + " ) T_TABLE_NAME, ";
+//        sqlQueryResult += " ( SELECT COUNT(*) totalRow FROM ( "
+//                + sqlQuery
+//                + " ) T_TABLE_TOTAL ) ";
+//        sqlQueryResult += "T_TABLE_NAME_TOTAL ";
+//        parameters.put("p_page_number", page);
+//        parameters.put("p_page_length", pageSize);
+//        List<?> list = getNamedParameterJdbcTemplate().query(sqlQueryResult, parameters, BeanPropertyRowMapper.newInstance(mappedClass));
+//        int count = 0;
+//        if (list.isEmpty()) {
+//            dataReturn.setTotal(count);
+//        } else {
+//            try {
+//                Object obj = list.get(0);
+//                Field field = obj.getClass().getSuperclass().getDeclaredField("totalRow");
+//                field.setAccessible(true);
+//                count = Integer.parseInt(field.get(obj).toString());
+//                dataReturn.setTotal(count);
+//            } catch (NoSuchFieldException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        if (pageSize > 0) {
+//            if (count % pageSize == 0) {
+//                dataReturn.setPages(count / pageSize);
+//            } else {
+//                dataReturn.setPages((count / pageSize) + 1);
+//            }
+//        }
+//        dataReturn.setData(list);
+//        return dataReturn;
+//    }
 
     //oracle
 /*

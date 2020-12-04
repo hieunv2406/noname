@@ -1,6 +1,7 @@
 package com.example.business;
 
-import com.example.common.*;
+import com.example.common.CommonExport;
+import com.example.common.I18n;
 import com.example.common.config.CellConfigExport;
 import com.example.common.config.ConfigFileExport;
 import com.example.common.config.ConfigHeaderExport;
@@ -72,8 +73,8 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
     private File exportTemplate(List<EmployeeDTO> dtoList, String key) throws Exception {
         String fileNameOut;
         String subTitle = null;
-        String sheetName = "Employee_export_title_test";
-        String title = "Employee_export_title_test";
+        String sheetName = I18n.getLanguage("language.employee.title");
+        String title = I18n.getLanguage("language.employee.title");
         List<ConfigFileExport> fileExportList = new ArrayList<>();
         List<ConfigHeaderExport> headerExportList;
         if ("RESULT_IMPORT".equalsIgnoreCase(key)) {
@@ -110,10 +111,10 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                 headerExportList,
                 fieldSplit,
                 "",
-                I18n.getLanguage("language.common.firstLeftHeaderTitle", null),
-                I18n.getLanguage("language.common.secondLeftHeaderTitle", null),
-                I18n.getLanguage("language.common.firstRightHeaderTitle", null),
-                I18n.getLanguage("language.common.secondRightHeaderTitle", null));
+                I18n.getLanguage("language.common.firstLeftHeaderTitle"),
+                I18n.getLanguage("language.common.secondLeftHeaderTitle"),
+                I18n.getLanguage("language.common.firstRightHeaderTitle"),
+                I18n.getLanguage("language.common.secondRightHeaderTitle"));
         configFileExport.setLangKey("i18n/vi");
         List<CellConfigExport> lstCellSheet = new ArrayList<>();
         CellConfigExport cellSheet;

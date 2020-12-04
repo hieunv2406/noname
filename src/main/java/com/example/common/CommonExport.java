@@ -133,7 +133,7 @@ public class CommonExport {
                                             int s = 0;
                                             for (String sub : header.getSubHeader()) {
                                                 Cell cellHeaderSub1 = rowHeaderSub.createCell(k);
-                                                cellHeaderSub1.setCellValue(I18n.getLanguage(item.getHeaderPrefix() + "." + sub, null));
+                                                cellHeaderSub1.setCellValue(I18n.getLanguage(item.getHeaderPrefix() + "." + sub));
                                                 k++;
                                                 s++;
                                             }
@@ -144,7 +144,7 @@ public class CommonExport {
                                 }
                             } else {
                                 cellHeader = rowHeader.createCell(index + 2);
-                                cellHeader.setCellValue(I18n.getLanguage(item.getHeaderPrefix() + "." + header.getFieldName(), null));
+                                cellHeader.setCellValue(I18n.getLanguage(item.getHeaderPrefix() + "." + header.getFieldName()));
                                 if (header.isHasMerge()) {
                                     CellRangeAddress cellRangeAddress = new CellRangeAddress(
                                             item.getStartRow(), item.getStartRow() + header.getMergeRow(),

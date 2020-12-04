@@ -1,6 +1,6 @@
 package com.example.common.validator;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Log4j
+@Slf4j
 public class MultiFieldUniqueHasNullValidator implements ConstraintValidator<MultiFieldUniqueHasNull, Object> {
 
     private Class clazz;
@@ -45,7 +45,7 @@ public class MultiFieldUniqueHasNullValidator implements ConstraintValidator<Mul
 //            }
 
         } catch (Exception e) {
-
+            log.error(e.getMessage(), e);
         }
 
         return false;
