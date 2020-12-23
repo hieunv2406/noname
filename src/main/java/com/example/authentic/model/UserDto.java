@@ -11,10 +11,25 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsersDto {
+public class UserDto {
+    private Long id;
+
     @NotNull(message = "{language.valid.user.username}")
     private String username;
+
     @NotNull(message = "{language.valid.user.password}")
     private String password;
-    private String email;
+
+    public UserDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public UserEntitiy toEntity() {
+        return new UserEntitiy(
+                id,
+                username,
+                password
+        );
+    }
 }

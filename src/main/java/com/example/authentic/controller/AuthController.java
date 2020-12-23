@@ -2,7 +2,7 @@ package com.example.authentic.controller;
 
 import com.example.authentic.model.JwtResponse;
 import com.example.authentic.model.JwtUserDetails;
-import com.example.authentic.model.UsersDto;
+import com.example.authentic.model.UserDto;
 import com.example.authentic.security.JwtUtils;
 import com.example.common.dto.ResultInsideDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class AuthController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping(path = "/signup")
-    public ResponseEntity<ResultInsideDTO> registerAccount(@RequestBody @Valid UsersDto usersDto) {
+    public ResponseEntity<ResultInsideDTO> registerAccount(@RequestBody @Valid UserDto userDto) {
         ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
 //        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 //            return ResponseEntity
@@ -55,9 +55,8 @@ public class AuthController {
 //        }
 
         // Create new user's account
-        UsersDto user = new UsersDto(usersDto.getUsername(),
-                usersDto.getEmail(),
-                passwordEncoder.encode(usersDto.getPassword()));
+        UserDto user = new UserDto(userDto.getUsername(),
+                passwordEncoder.encode(userDto.getPassword()));
 
 //
 //        Set<String> strRoles = usersDto.getRoles();
@@ -94,9 +93,9 @@ public class AuthController {
     }
 
     @PostMapping(path = "/signin")
-    public ResponseEntity<?> loginAccount(@RequestBody @Valid UsersDto usersDto) {
+    public ResponseEntity<?> loginAccount(@RequestBody @Valid UserDto userDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(usersDto.getUsername(), usersDto.getPassword()));
+                new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 

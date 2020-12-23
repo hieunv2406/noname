@@ -1,7 +1,6 @@
 package com.example.authentic.controller;
 
 import com.example.authentic.model.JwtUser;
-import com.example.authentic.security.JwtGenerator;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
