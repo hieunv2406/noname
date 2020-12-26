@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,16 +22,31 @@ public class UserDto {
     @NotNull(message = "{language.valid.user.password}")
     private String password;
 
-    public UserDto(String username, String password) {
+    private String email;
+
+    private Set<RolesDto> roles = new HashSet<>();
+
+    private String[] lstRoleInput;
+
+    public UserDto(Long id, String username, String password, String email) {
+        this.id = id;
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
-    public UserEntitiy toEntity() {
-        return new UserEntitiy(
+    public UserDto(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
+    public UserEntity toEntity() {
+        return new UserEntity(
                 id,
                 username,
-                password
+                password,
+                email
         );
     }
 }

@@ -1,26 +1,71 @@
 package com.example.authentic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class JwtUserDetails implements UserDetails {
-
-    private String userName;
-    private String token;
     private Long id;
+    private String username;
+    private String email;
+    @JsonIgnore
+    private String password;
+    private String token;
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public JwtUserDetails(String userName, long id, String token, List<GrantedAuthority> grantedAuthorities) {
-
-        this.userName = userName;
+    public JwtUserDetails(Long id, String username, String email, String password,
+                          Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public JwtUserDetails(Long id,
+                          String username,
+                          String token,
+                          Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.token = token;
+        this.authorities = authorities;
+    }
+
+    public JwtUserDetails(long id, String userName, String email, String password, String token,
+                          List<GrantedAuthority> grantedAuthorities) {
+
+        this.id = id;
+        this.username = userName;
+        this.email = email;
+        this.password = password;
         this.token = token;
         this.authorities = grantedAuthorities;
     }
+
+    public static JwtUserDetails build(UserDto userDto) {
+        List<GrantedAuthority> authorities = userDto.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
+
+        return new JwtUserDetails(
+                userDto.getId(),
+                userDto.getUsername(),
+                userDto.getEmail(),
+                userDto.getPassword(),
+                authorities);
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -29,12 +74,12 @@ public class JwtUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override
@@ -56,19 +101,4 @@ public class JwtUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
 }

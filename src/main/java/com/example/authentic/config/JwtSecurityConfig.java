@@ -1,6 +1,7 @@
 package com.example.authentic.config;
 
 
+import com.example.authentic.business.UserDetailsServiceImpl;
 import com.example.authentic.security.JwtAuthenticationEntryPoint;
 import com.example.authentic.security.JwtAuthenticationProvider;
 import com.example.authentic.security.JwtAuthenticationTokenFilter;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,11 +28,12 @@ import java.util.Collections;
 @Configuration
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     @Autowired
     private JwtAuthenticationProvider authenticationProvider;
     @Autowired
     private JwtAuthenticationEntryPoint entryPoint;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public AuthenticationManager authenticationManager() {
@@ -50,16 +53,27 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+//        authenticationManagerBuilder.authenticationProvider(authenticationProvider);
+//    }
+
+    @Override
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable()
-                .authorizeRequests().antMatchers("**/rest/**").authenticated()
-                .and()
                 .exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests().antMatchers("/api/account/**").permitAll()
+                .antMatchers("**/rest/**").permitAll()
+                .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.headers().cacheControl();

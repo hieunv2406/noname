@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "USER")
-public class UserEntitiy {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -25,11 +25,15 @@ public class UserEntitiy {
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name = "EMAIL")
+    private String email;
+
     public UserDto toDTO() {
         return new UserDto(
                 id,
                 username,
-                password
+                password,
+                email
         );
     }
 }

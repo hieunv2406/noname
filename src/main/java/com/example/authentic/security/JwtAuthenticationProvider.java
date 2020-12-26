@@ -1,7 +1,7 @@
 package com.example.authentic.security;
 
 import com.example.authentic.model.JwtAuthenticationToken;
-import com.example.authentic.model.JwtUser;
+import com.example.authentic.model.JwtResponse;
 import com.example.authentic.model.JwtUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,30 +18,29 @@ import java.util.List;
 public class JwtAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     @Autowired
-    private JwtValidator validator;
+    private JwtUtils jwtUtils;
 
     @Override
-    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {
-
+    protected void additionalAuthenticationChecks(
+            UserDetails userDetails,
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+    ) throws AuthenticationException {
     }
 
     @Override
-    protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {
-
+    protected UserDetails retrieveUser(
+            String username,
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+    ) throws AuthenticationException {
         JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) usernamePasswordAuthenticationToken;
         String token = jwtAuthenticationToken.getToken();
-
-        JwtUser jwtUser = validator.validate(token);
-
-        if (jwtUser == null) {
+        JwtResponse jwtResponse = jwtUtils.validateJwtToken(token);
+        if (jwtResponse == null) {
             throw new RuntimeException("JWT Token is incorrect");
         }
-
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList(jwtUser.getRole());
-        return new JwtUserDetails(jwtUser.getUserName(), jwtUser.getId(),
-                token,
-                grantedAuthorities);
+                .commaSeparatedStringToAuthorityList(jwtResponse.getRoles().get(0));
+        return new JwtUserDetails(jwtResponse.getId(), jwtResponse.getUsername(), token, grantedAuthorities);
     }
 
     @Override

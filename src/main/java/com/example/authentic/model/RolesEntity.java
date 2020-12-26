@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "ROLES")
-public class RolesEntitiy {
+public class RolesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +24,11 @@ public class RolesEntitiy {
     @Column(name = "NAME")
     private ERole name;
 
-    public RolesEntitiy(ERole name) {
-        this.name = name;
+    public RolesDto toDTO() {
+        return new RolesDto(
+                id,
+                name
+        );
     }
-
 
 }
