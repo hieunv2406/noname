@@ -23,8 +23,14 @@ public class JwtUtils {
 
     public String generateJwtToken(Authentication authentication) {
         JwtUserDetails userPrincipal = (JwtUserDetails) authentication.getPrincipal();
+        Claims claims = Jwts.claims()
+                .setSubject((userPrincipal.getUsername()));
+        claims.put("userId",String.valueOf(userPrincipal.getId()));
+        claims.put("email", userPrincipal.getEmail());
+        claims.put("roles", userPrincipal.getAuthorities());
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
+                .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

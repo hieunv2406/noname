@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/pub/hello")
+@RequestMapping("/public/hello")
 public class PublicController {
 
     @GetMapping("/all")

@@ -4,6 +4,7 @@ import com.example.authentic.model.*;
 import com.example.authentic.repository.RolesRepository;
 import com.example.authentic.repository.UserRepository;
 import com.example.authentic.repository.UserRolesRepository;
+import com.example.authentic.security.CustomAuthenticationProvider;
 import com.example.authentic.security.JwtUtils;
 import com.example.common.Constant;
 import com.example.common.dto.ResultInsideDTO;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +34,10 @@ public class AuthController {
 
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    AbstractUserDetailsAuthenticationProvider abstractUserDetailsAuthenticationProvider;
+    @Autowired
+    CustomAuthenticationProvider customAuthenticationProvider;
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
@@ -103,8 +109,12 @@ public class AuthController {
 
     @PostMapping(path = "/signin")
     public ResponseEntity<?> loginAccount(@RequestBody @Valid UserDto userDto) {
+//        Authentication authentication = abstractUserDetailsAuthenticationProvider.authenticate(
+//                new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
+//                Authentication authentication = customAuthenticationProvider.authenticate(
+//                new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         JwtUserDetails userDetails = (JwtUserDetails) authentication.getPrincipal();
