@@ -16,4 +16,10 @@ public abstract class Constant {
     public static class SEQUENCE_KEY {
         public static final String EMPLOYEE = "EMPLOYEE_SEQ";
     }
+
+    public static class AUTH_KEY {
+        public static final String HEADER_KEY = "Authorization";
+        public static final String PREFIX_KEY = "Bearer";
+        public static final int EXPIRATION_MS = 86400000;
+    }
 }

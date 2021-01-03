@@ -1,10 +1,14 @@
 package com.example.authentic.security;
 
-import com.example.authentic.model.JwtAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import com.example.authentic.business.UserDetailsServiceImpl;
+import com.example.common.Constant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,40 +16,43 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessingFilter {
-    protected JwtAuthenticationTokenFilter(String defaultFilterProcessesUrl) {
-        super(defaultFilterProcessesUrl);
-    }
+public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    protected JwtAuthenticationTokenFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
-        super(requiresAuthenticationRequestMatcher);
-    }
-
-    public JwtAuthenticationTokenFilter() {
-        super("/rest/**");
-    }
+    @Autowired
+    private JwtAuthenticationProvider jwtAuthenticationProvider;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest httpServletRequest,
-                                                HttpServletResponse httpServletResponse
-    ) throws AuthenticationException, IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest
+            , HttpServletResponse httpServletResponse
+            , FilterChain filterChain) throws ServletException, IOException {
 
-        String header = httpServletRequest.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
-            throw new RuntimeException("JWT Token is missing");
+        try {
+            String jwt = parseJwt(httpServletRequest);
+            if (jwt != null && jwtAuthenticationProvider.validateJwtToken(jwt)) {
+
+                String username = jwtAuthenticationProvider.getUserNameFromJwtToken(jwt);
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            logger.error("Cannot set user authentication: {}", e);
         }
-        String authenticationToken = header.substring(6);
-        JwtAuthenticationToken token = new JwtAuthenticationToken(authenticationToken);
-        return getAuthenticationManager().authenticate(token);
+
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
-
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
-        chain.doFilter(request, response);
+    private String parseJwt(HttpServletRequest httpServletRequest) {
+        String headerAuth = httpServletRequest.getHeader(Constant.AUTH_KEY.HEADER_KEY);
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(Constant.AUTH_KEY.PREFIX_KEY)) {
+            return headerAuth.substring(7, headerAuth.length());
+        }
+        return null;
     }
 }
