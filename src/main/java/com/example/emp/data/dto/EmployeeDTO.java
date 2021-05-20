@@ -1,12 +1,11 @@
-package com.example.data.dto;
+package com.example.emp.data.dto;
 
 import com.example.common.dto.BaseDTO;
-import com.example.data.entity.EmployeeEntity;
+import com.example.emp.data.entity.EmployeeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.aspectj.lang.annotation.RequiredTypes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;

@@ -1,13 +1,13 @@
-package com.example.repository;
+package com.example.emp.repository;
 
 import com.example.common.Constant;
-import com.example.common.utils.DataUtil;
-import com.example.common.dto.Datatable;
 import com.example.common.dto.BaseDTO;
+import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.common.repository.BaseRepository;
-import com.example.data.dto.EmployeeDTO;
-import com.example.data.entity.EmployeeEntity;
+import com.example.common.utils.DataUtil;
+import com.example.emp.data.dto.EmployeeDTO;
+import com.example.emp.data.entity.EmployeeEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,15 +86,14 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
                 " t.cot2 cot2, " +
                 " t.cot3 cot3 " +
                 " from " +
-                " tabledetest t " +
+                " table_test t " +
                 " where " +
                 " 1 = 1 ";
         List<Map<String, Object>> mapResult = getNamedParameterJdbcTemplate().queryForList(sql, beanMap);
         return mapResult;
     }
 
-    private BaseDTO sqlSearch(EmployeeDTO employeeDTO)
-    {
+    private BaseDTO sqlSearch(EmployeeDTO employeeDTO) {
         BaseDTO baseDTO = new BaseDTO();
         Map<String, Object> parameter = new HashMap<>();
         String sql = getSQLFromFile("employee", "getEmployeeDTO");

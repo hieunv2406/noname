@@ -56,7 +56,8 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests().antMatchers("/api/account/**").permitAll()
                 .antMatchers("/public/**").permitAll()
-                .antMatchers("/**").permitAll() //tạm thời để dùng swagger
+                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger-resources/**",
+                        "/swagger-ui.html", "/webjars/**").permitAll() //tạm thời để dùng swagger
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(entryPoint)

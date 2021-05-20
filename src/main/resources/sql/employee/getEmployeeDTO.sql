@@ -8,6 +8,6 @@ select
 	e.gender gender,
 	e.address
 from
-	employee e
+	employees e
 where
 	1 = 1

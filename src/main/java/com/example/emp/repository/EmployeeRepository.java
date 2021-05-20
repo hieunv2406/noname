@@ -1,8 +1,8 @@
-package com.example.repository;
+package com.example.emp.repository;
 
 import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
-import com.example.data.dto.EmployeeDTO;
+import com.example.emp.data.dto.EmployeeDTO;
 
 import java.util.List;
 import java.util.Map;

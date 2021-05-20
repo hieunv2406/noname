@@ -1,4 +1,4 @@
-package com.example.business;
+package com.example.emp.business;
 
 import com.example.common.CommonExport;
 import com.example.common.I18n;
@@ -7,8 +7,8 @@ import com.example.common.config.ConfigFileExport;
 import com.example.common.config.ConfigHeaderExport;
 import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
-import com.example.data.dto.EmployeeDTO;
-import com.example.repository.EmployeeRepository;
+import com.example.emp.data.dto.EmployeeDTO;
+import com.example.emp.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
-package com.example.data.entity;
+package com.example.emp.data.entity;
 
-import com.example.data.dto.EmployeeDTO;
+import com.example.emp.data.dto.EmployeeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "EMPLOYEE")
+@Table(name = "EMPLOYEES")
 public class EmployeeEntity implements Serializable {
     @Id
 //    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constant.SEQUENCE_KEY.EMPLOYEE)
