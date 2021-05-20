@@ -1,7 +1,7 @@
 package com.example.authentic.security;
 
 import com.example.authentic.business.UserDetailsServiceImpl;
-import com.example.common.Constant;
+import com.example.common.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,8 +49,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest httpServletRequest) {
-        String headerAuth = httpServletRequest.getHeader(Constant.AUTH_KEY.HEADER_KEY);
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(Constant.AUTH_KEY.PREFIX_KEY)) {
+        String headerAuth = httpServletRequest.getHeader(Constants.AUTH_KEY.HEADER_KEY);
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(Constants.AUTH_KEY.PREFIX_KEY)) {
             return headerAuth.substring(7, headerAuth.length());
         }
         return null;

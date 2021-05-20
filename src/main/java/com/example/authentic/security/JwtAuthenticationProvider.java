@@ -2,7 +2,7 @@ package com.example.authentic.security;
 
 import com.example.authentic.model.JwtResponse;
 import com.example.authentic.model.JwtUserDetails;
-import com.example.common.Constant;
+import com.example.common.Constants;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +31,7 @@ public class JwtAuthenticationProvider {
                 .setSubject((userPrincipal.getUsername()))
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + Constant.AUTH_KEY.EXPIRATION_MS))
+                .setExpiration(new Date((new Date()).getTime() + Constants.AUTH_KEY.EXPIRATION_MS))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

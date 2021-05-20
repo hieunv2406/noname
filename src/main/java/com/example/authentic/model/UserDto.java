@@ -1,10 +1,13 @@
 package com.example.authentic.model;
 
+import com.example.common.validator.MultiFieldUnique;
+import com.example.emp.data.entity.EmployeeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,13 +16,14 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@MultiFieldUnique(clazz = UserEntity.class, uniqueFields = "username,email", idField = "id", message = "{validation.unique.user}")
 public class UserDto {
     private Long id;
 
-    @NotNull(message = "{language.valid.user.username}")
+    @NotEmpty(message = "{validation.user.username.notnull}")
     private String username;
 
-    @NotNull(message = "{language.valid.user.password}")
+    @NotEmpty(message = "{validation.user.password.notnull}")
     private String password;
 
     private String email;

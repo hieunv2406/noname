@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -32,13 +33,13 @@ public class EmployeeController {
     }
 
     @PostMapping(value = "/insert")
-    public ResponseEntity<ResultInsideDTO> insertEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<ResultInsideDTO> insertEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
         ResultInsideDTO resultInsideDTO = employeeBusiness.insertEmployee(employeeDTO);
         return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
     }
 
     @PostMapping(value = "/update")
-    public ResponseEntity<ResultInsideDTO> updateEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<ResultInsideDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
         ResultInsideDTO resultInsideDTO = employeeBusiness.updateEmployee(employeeDTO);
         return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
     }

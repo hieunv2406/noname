@@ -3,7 +3,7 @@ package com.example.common;
 import com.example.common.utils.DataUtil;
 import com.example.common.utils.SpringUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import java.util.Locale;
 
@@ -20,7 +20,7 @@ public class I18n {
     }
 
     public static String getLanguage(String code, Object... args) {
-        ResourceBundleMessageSource messageSource = SpringUtils.getBean("getMessageSource");
+        ReloadableResourceBundleMessageSource messageSource = SpringUtils.getBean("messageSource");
         if (DataUtil.isNullOrEmpty(messageSource)) {
             throw new IllegalArgumentException("message source is null");
         }

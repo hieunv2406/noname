@@ -1,12 +1,15 @@
 package com.example.common.repository;
 
+import com.example.common.Constants;
 import com.example.common.dto.Datatable;
 import com.example.common.utils.FileUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
+@Repository
 public abstract class BaseRepository<T> {
 
     @PersistenceContext
@@ -272,6 +277,69 @@ public abstract class BaseRepository<T> {
             ioe.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Check unique with multiple field
+     */
+    public boolean checkUniqueWithMultiFields(Class<T> persistentClass, String idField, Long idValue,
+                                              Object... params) {
+        Map<String, Object> mapParams = new HashMap<>();
+        String sqlQuery = " Select t from " + persistentClass.getSimpleName() + " t WHERE 1=1 ";
+        if (params.length > 0) {
+            for (int i = 0; i < params.length; i++) {
+                if (i % 2 == 0) {
+                    if (params[i + 1] != null) {
+                        boolean isNumber = false;
+                        try {
+                            Field field = persistentClass.getDeclaredField(String.valueOf(params[i]));
+                            String returnType = field.getType().getSimpleName().toUpperCase();
+                            if (Constants.TYPE_NUMBER.indexOf(returnType) >= 0) {
+                                isNumber = true;
+                            }
+                        } catch (Exception e) {
+                            log.error(e.getMessage(), e);
+                        }
+                        if (params[i + 1] instanceof String && !isNumber) {
+                            sqlQuery += " AND lower(t." + params[i] + ") = :p_" + params[i] + " ";
+                            mapParams.put("p_" + params[i], params[i + 1].toString().trim().toLowerCase());
+                        } else {
+                            sqlQuery += " AND t." + params[i] + " = :p_" + params[i] + " ";
+                            mapParams.put("p_" + params[i], params[i + 1]);
+                        }
+                    }
+                }
+            }
+        }
+        sqlQuery += " AND t." + idField + " <> :p_" + idField;
+        Query query = entityManager.createQuery(sqlQuery);
+        for (Map.Entry<String, Object> entry : mapParams.entrySet()) {
+            try {
+                String fieldName = entry.getKey().split("_")[1];
+                Field field = persistentClass.getDeclaredField(fieldName);
+                String returnType = field.getType().getSimpleName().toUpperCase();
+                if ("Double".equalsIgnoreCase(returnType)) {
+                    query.setParameter(entry.getKey(), Double.valueOf(String.valueOf(entry.getValue())));
+                } else if ("Integer".equalsIgnoreCase(returnType)) {
+                    query.setParameter(entry.getKey(), Integer.valueOf(String.valueOf(entry.getValue())));
+                } else if ("Float".equalsIgnoreCase(returnType)) {
+                    query.setParameter(entry.getKey(), Float.valueOf(String.valueOf(entry.getValue())));
+                } else if ("Short".equalsIgnoreCase(returnType)) {
+                    query.setParameter(entry.getKey(), Short.valueOf(String.valueOf(entry.getValue())));
+                } else if ("Long".equalsIgnoreCase(returnType)) {
+                    query.setParameter(entry.getKey(), Long.valueOf(String.valueOf(entry.getValue())));
+                } else {
+                    query.setParameter(entry.getKey(), entry.getValue());
+                }
+                continue;
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        query.setParameter("p_" + idField, idValue);
+        List<T> lst = query.getResultList();
+        return lst == null || lst.size() == 0;
     }
 
 }

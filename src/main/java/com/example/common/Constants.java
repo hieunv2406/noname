@@ -1,6 +1,10 @@
 package com.example.common;
 
-public abstract class Constant {
+import ch.qos.logback.core.util.COWArrayList;
+
+public abstract class Constants {
+    public static final String TYPE_NUMBER = "LONG,INTEGER,SHORT,BYTE,INT,DOUBLE,FLOAT";
+
     public static class RESPONSE_KEY {
         public static final String SUCCESS = "SUCCESS";
         public static final String DELETE_SUCCESS = "DELETE_SUCCESS";

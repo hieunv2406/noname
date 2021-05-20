@@ -1,6 +1,6 @@
 package com.example.emp.repository;
 
-import com.example.common.Constant;
+import com.example.common.Constants;
 import com.example.common.dto.BaseDTO;
 import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
@@ -31,7 +31,7 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
     @Override
     public ResultInsideDTO insertEmployee(EmployeeDTO employeeDTO) {
         ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constant.RESPONSE_KEY.SUCCESS);
+        resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);
         EmployeeEntity employeeEntity = getEntityManager().merge(employeeDTO.toEntity());
         resultInsideDTO.setId(employeeEntity.getEmployeeId());
         return resultInsideDTO;
@@ -40,13 +40,13 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
     @Override
     public ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO) {
         ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constant.RESPONSE_KEY.SUCCESS);
+        resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);
         EmployeeEntity employeeEntity = getEntityManager().find(EmployeeEntity.class, employeeDTO.getEmployeeId());
         if (employeeEntity != null) {
             employeeEntity = getEntityManager().merge(employeeDTO.toEntity());
             resultInsideDTO.setId(employeeEntity.getEmployeeId());
         } else {
-            resultInsideDTO.setKey(Constant.RESPONSE_KEY.RECORD_NOT_EXIST);
+            resultInsideDTO.setKey(Constants.RESPONSE_KEY.RECORD_NOT_EXIST);
         }
         return resultInsideDTO;
     }
@@ -54,7 +54,7 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
     @Override
     public ResultInsideDTO deleteEmployeeById(Long employeeId) {
         ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constant.RESPONSE_KEY.SUCCESS);
+        resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);
         EmployeeEntity employeeEntity = getEntityManager().find(EmployeeEntity.class, employeeId);
         getEntityManager().remove(employeeEntity);
         return resultInsideDTO;

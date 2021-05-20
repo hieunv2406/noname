@@ -5,7 +5,7 @@ import com.example.authentic.repository.RolesRepository;
 import com.example.authentic.repository.UserRepository;
 import com.example.authentic.repository.UserRolesRepository;
 import com.example.authentic.security.JwtAuthenticationProvider;
-import com.example.common.Constant;
+import com.example.common.Constants;
 import com.example.common.dto.ResultInsideDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,14 +46,14 @@ public class AuthController {
     @PostMapping(path = "/signup")
     public ResponseEntity<ResultInsideDTO> registerAccount(@RequestBody @Valid UserDto userDto) {
         ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constant.RESPONSE_KEY.SUCCESS);
+        resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);
         if (userRepository.existsByUsername(userDto.getUsername())) {
-            resultInsideDTO.setKey(Constant.RESPONSE_KEY.ERROR);
+            resultInsideDTO.setKey(Constants.RESPONSE_KEY.ERROR);
             resultInsideDTO.setMessages("Error: Username is already taken!");
             return new ResponseEntity<>(resultInsideDTO, HttpStatus.BAD_REQUEST);
         }
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            resultInsideDTO.setKey(Constant.RESPONSE_KEY.ERROR);
+            resultInsideDTO.setKey(Constants.RESPONSE_KEY.ERROR);
             resultInsideDTO.setMessages("Error: Email is already in use!");
             return new ResponseEntity<>(resultInsideDTO, HttpStatus.BAD_REQUEST);
         }
