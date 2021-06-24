@@ -4,6 +4,7 @@ import Builder from "./Builder";
 import Dashboard from "./Dashboard";
 import DocsPage from "./docs/DocsPage";
 import { LayoutSplashScreen } from "../../../_metronic";
+import EmployeeManagerRouter from "./employee-manager/EmployeeManagerRouter";
 
 const GoogleMaterialPage = lazy(() =>
   import("./google-material/GoogleMaterialPage")
@@ -25,6 +26,7 @@ export default function HomePage() {
         <Route path="/google-material" component={GoogleMaterialPage} />
         <Route path="/react-bootstrap" component={ReactBootstrapPage} />
         <Route path="/docs" component={DocsPage} />
+        <Route path = "/employee-manager" component={EmployeeManagerRouter}/>
         <Redirect to="/error/error-v1" />
       </Switch>
     </Suspense>

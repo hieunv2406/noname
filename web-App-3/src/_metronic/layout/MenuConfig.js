@@ -905,7 +905,7 @@ export default {
         root: true,
         bullet: "line",
         icon: "flaticon-user",
-        page: "error/error-v2"
+        page: "employee-manager/employee-data"
       }
     ]
   }
