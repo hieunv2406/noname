@@ -1,31 +1,26 @@
-import React from "react";
-import Notice from "../../../partials/content/Notice";
-import CodeExample from "../../../partials/content/CodeExample";
-import { Table } from "react-bootstrap";
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
 
-export default class EmployeeManagerPage extends React.Component {
-  render() {
-    return (
-      <>
-        <Notice icon="flaticon-warning kt-font-primary">
-          For more info please check the components's official{" "}
-          <a
-            target="_blank"
-            className="kt-link"
-            rel="noopener noreferrer"
-            href="https://react-bootstrap.github.io/components/table/"
-          >
-            demos & documentation
-          </a>
-        </Notice>
-
-        <div className="row">
-          <div className="col-md-12">
-            <CodeExample jsCode={""} beforeCodeTitle="Breakpoint specific">
-              <div className="kt-section">
-                <div className="kt-separator kt-separator--dashed"></div>
-                <div>
-                  <Table responsive="md">
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+      <div className="table-responsive-md">
+                  <table className="table">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -66,13 +61,10 @@ export default class EmployeeManagerPage extends React.Component {
                         <td>Table cell</td>
                       </tr>
                     </tbody>
-                  </Table>
+                  </table>
                 </div>
-              </div>
-            </CodeExample>
-          </div>
-        </div>
-      </>
-    );
-  }
+    </div>
+  );
 }
+
+export default App;
