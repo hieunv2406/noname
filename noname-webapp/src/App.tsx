@@ -1,68 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import List from './components/List';
 
 function App() {
+
+  interface IState {
+    people: {
+      name: string,
+      age: number,
+      url: string,
+      note?: string
+    }[]
+  }
+
+  const [people, setPeople] = useState<IState["people"]>([
+    {
+      name: "Hieu Nguyen",
+      age: 25,
+      url: "",
+      note: "Hieu 123123412341"
+    }
+  ])
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <div className="table-responsive-md">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Table heading</th>
-                        <th>Table heading</th>
-                        <th>Table heading</th>
-                        <th>Table heading</th>
-                        <th>Table heading</th>
-                        <th>Table heading</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                        <td>Table cell</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+      <h1>People invited to my party</h1>
+      <List people={people} />
     </div>
   );
 }
