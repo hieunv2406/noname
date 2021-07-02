@@ -340,6 +340,11 @@ public class CommonExport {
 
                 // </editor-fold>
             }
+
+            //Remove sheet index(0)
+            if (exportChart == null || exportChart.length == 0) {
+                workbook.removeSheetAt(0);
+            }
             try {
                 FileOutputStream fileOut = new FileOutputStream(pathOut);
                 workbook.write(fileOut);
