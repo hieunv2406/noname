@@ -32,6 +32,8 @@ public class EmployeeDTO extends BaseDTO {
     private String address;
     private MultipartFile file;
 
+    private String genderStr;
+
     public EmployeeDTO(Long employeeId, String code, String username, String fullName, String email, Date birthday, Long gender, String address) {
         this.employeeId = employeeId;
         this.code = code;

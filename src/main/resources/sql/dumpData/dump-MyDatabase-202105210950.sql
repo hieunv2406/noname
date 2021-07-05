@@ -18,6 +18,8 @@
 --
 -- Table structure for table `employees`
 --
+CREATE DATABASE `myDatabase` if not exists;
+use `myDatabase`;
 
 DROP TABLE IF EXISTS `employees`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

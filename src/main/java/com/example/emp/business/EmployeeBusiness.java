@@ -25,4 +25,6 @@ public interface EmployeeBusiness {
 
     File exportData(EmployeeDTO employeeDTO) throws Exception;
 
+    File getTemplate() throws Exception;
+
 }

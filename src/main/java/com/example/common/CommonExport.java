@@ -72,6 +72,7 @@ public class CommonExport {
 
             // </editor-fold>
 
+            // <editor-fold defaultstate="collapsed" desc="Config">
             for (ConfigFileExport item : config) {
                 Map<String, String> fieldSpit = item.getFieldSplit();
                 SXSSFSheet sheet;
@@ -270,62 +271,225 @@ public class CommonExport {
                                         int s = 0;
                                         for (String sub : head.getSubHeader()) {
                                             cell = row.createCell(j + 1);
-                                            String[] replate = head.getReplace();
-                                            if (!DataUtil.isNullOrEmpty(replate)) {
+                                            String[] replace = head.getReplace();
+                                            if (!DataUtil.isNullOrEmpty(replace)) {
                                                 List<String> more = new ArrayList<>();
-                                                if (replate.length > 2) {
-                                                    for (int n = 2; n < replate.length; n++) {
-                                                        Object objStr = mapField.get(replate[n]).get(obj);
+                                                if (replace.length > 2) {
+                                                    for (int n = 2; n < replace.length; n++) {
+                                                        Object objStr = mapField.get(replace[n]).get(obj);
                                                         String valueStr = objStr == null ? "" : objStr.toString();
                                                         more.add(valueStr);
                                                     }
                                                 }
-//                                                if ("NUMBER".equals(head.getStyleFormat())) {
-//                                                    double numberValue = replateNumberValue(replate[0], m, more, s);
-//                                                    if () {
-//
-//                                                    } else if () {
-//
-//                                                    } else {
-//
-//                                                    }
-//                                                } else {
-//
-//                                                }
+                                                if ("NUMBER".equals(head.getStyleFormat())) {
+                                                    double numberValue = replaceNumberValue(replace[0], m,
+                                                            more, s);
+                                                    if (Double.compare(numberValue, -888) == 0) {
+                                                        cell.setCellValue("*");
+                                                    } else if (Double.compare(numberValue, -999) == 0) {
+                                                        cell.setCellValue("-");
+                                                    } else {
+                                                        cell.setCellValue(numberValue);
+                                                    }
+                                                } else {
+                                                    cell.setCellValue(replaceStringValue(replace[0], m, more, s));
+                                                }
                                                 s++;
+                                            } else {
+                                                String subValue = "";
+                                                for (Field subf : firstRow.getClass().getDeclaredFields()) {
+                                                    subf.setAccessible(true);
+                                                    if (subf.getName().equals(sub)) {
+                                                        String[] arrSub = (subf.get(obj) == null ? "" : subf.get(
+                                                                obj).toString()).split(item.getSplitChar());
+                                                        subValue = arrSub[m];
+                                                    }
+                                                }
+                                                if ("NUMBER".equals(head.getStyleFormat())) {
+                                                    if (!DataUtil.isNullOrEmpty(subValue)) {
+                                                        cell.setCellValue(Double.valueOf(subValue));
+                                                    } else {
+                                                        cell.setCellValue(subValue == null ? "" : subValue);
+                                                    }
+                                                } else {
+                                                    if (subValue == null) {
+                                                        cell.setCellValue("");
+                                                    } else if (subValue.length() > 32767) {
+                                                        cell.setCellValue(subValue.substring(0, 32766));
+                                                    } else {
+                                                        cell.setCellValue(subValue);//cut cho nay
+                                                    }
+                                                }
                                             }
-//                                            else {
-//                                                for () {
-//                                                    if () {
-//
-//                                                    }
-//                                                }
-//                                                if () {
-//                                                    if () {
-//
-//                                                    } else {
-//
-//                                                    }
-//                                                } else {
-//                                                    if () {
-//
-//                                                    } else if () {
-//
-//                                                    } else {
-//
-//                                                    }
-//                                                }
-//                                            }
+                                            if ("CENTER".equals(align)) {
+//                                                cell.setCellStyle(cellStyleCenter);
+                                            }
+                                            if ("LEFT".equals(align)) {
+//                                                cell.setCellStyle(cellStyleLeft);
+                                            }
+                                            if ("RIGHT".equals(align)) {
+//                                                cell.setCellStyle(cellStyleRight);
+                                            }
                                             j++;
                                         }
+                                    } else {
+                                        if (item.getCustomColumnWidth() != null
+                                                && item.getCustomColumnWidth().length > 0) {
+                                            if (j > 0) {
+                                                j++;
+                                            }
+                                            cell = row.createCell(j + 1);
+                                        } else {
+                                            cell = row.createCell(j + 1);
+                                        }
+                                        String[] replace = head.getReplace();
+                                        if (replace != null) {
+                                            Object valueReplace = mapField.get(replace[1]).get(obj);
+                                            List<String> more = new ArrayList<>();
+                                            if (replace.length > 2) {
+                                                for (int n = 2; n < replace.length; n++) {
+                                                    Object objStr = mapField.get(replace[n]).get(obj);
+                                                    String valueStr = objStr == null ? "" : objStr.toString();
+                                                    more.add(valueStr);
+                                                }
+                                            }
+                                            if ("NUMBER".equals(head.getStyleFormat())) {
+                                                double numberValue = replaceNumberValue(replace[0],
+                                                        valueReplace, more, m);
+                                                if (Double.compare(numberValue, -888) == 0) {
+                                                    cell.setCellValue("*");
+                                                } else if (Double.compare(numberValue, -999) == 0) {
+                                                    cell.setCellValue("-");
+                                                } else {
+                                                    cell.setCellValue(numberValue);
+                                                }
+                                            } else {
+                                                cell.setCellValue(replaceStringValue(replace[0], valueReplace, more, m));
+                                            }
+                                        } else {
+                                            if ("NUMBER".equals(head.getStyleFormat())) {
+                                                if (!DataUtil.isNullOrEmpty(fieldSplitValue[m])) {
+                                                    cell.setCellValue(Double.valueOf(fieldSplitValue[m]));
+                                                } else {
+                                                    cell.setCellValue(fieldSplitValue[m] == null ? "" : fieldSplitValue[m]);
+                                                }
+                                            } else {
+                                                cell.setCellValue(fieldSplitValue[m] == null ? "" : fieldSplitValue[m]);
+                                            }
+                                        }
+
+                                        if ("CENTER".equals(align)) {
+//                                            cell.setCellStyle(cellStyleCenter);
+                                        }
+                                        if ("LEFT".equals(align)) {
+//                                            cell.setCellStyle(cellStyleLeft);
+                                        }
+                                        if ("RIGHT".equals(align)) {
+//                                            cell.setCellStyle(cellStyleRight);
+                                        }
+                                        j++;
                                     }
-//                                    else {
-//
-//                                    }
-//                                if (!DataUtil.isNullOrEmpty(item.getCustomColumnWidth()) && item.getCustomColumnWidth().length>0){
-//
-//                                }
                                 }
+                            } else {
+                                String value = "";
+                                if (f != null) {
+                                    Object tempValue = f.get(obj);
+                                    if (tempValue instanceof Date) {
+                                        value = tempValue == null ? "" : DataUtil.convertDateToString((Date) tempValue);
+                                    } else {
+                                        value = tempValue == null ? "" : tempValue.toString();
+                                    }
+                                }
+                                if (item.getCustomColumnWidth() != null && item.getCustomColumnWidth().length > 0) {
+                                    if (j > 0) {
+                                        j++;
+                                    }
+                                    cell = row.createCell(j + 1);
+                                } else {
+                                    cell = row.createCell(j + 1);
+                                }
+
+                                String[] replace = head.getReplace();
+                                if (!DataUtil.isNullOrEmpty(replace)) {
+                                    Object valueReplace = mapField.get(replace[1]).get(obj);
+                                    List<String> more = new ArrayList<>();
+                                    if (replace.length > 2) {
+                                        for (int n = 2; n < replace.length; n++) {
+                                            Object objStr = mapField.get(replace[n]).get(obj);
+                                            String valueStr = objStr == null ? "" : objStr.toString();
+                                            more.add(valueStr);
+                                        }
+                                    }
+                                    if ("NUMBER".equals(head.getStyleFormat())) {
+                                        double numberValue = replaceNumberValue(replace[0], valueReplace, more,
+                                                i);
+                                        if (Double.compare(numberValue, -888) == 0) {
+                                            cell.setCellValue("*");
+                                        } else if (Double.compare(numberValue, -999) == 0) {
+                                            cell.setCellValue("-");
+                                        } else {
+                                            cell.setCellValue(numberValue);
+                                        }
+                                    } else {
+                                        cell.setCellValue(
+                                                replaceStringValue(replace[0], valueReplace, more, i));
+                                    }
+                                } else {
+                                    if ("NUMBER".equals(head.getStyleFormat())) {
+                                        if (!DataUtil.isNullOrEmpty(value)) {
+                                            cell.setCellValue(Double.valueOf(value));
+                                        } else {
+                                            cell.setCellValue(value == null ? "" : value);
+                                        }
+                                    } else {
+                                        if (value == null) {
+                                            cell.setCellValue("");
+                                        } else if (value.length() > 32767) {
+                                            cell.setCellValue(value.substring(0, 32766));
+                                        } else {
+                                            cell.setCellValue(value);//cut cho nay
+                                        }
+                                    }
+                                }
+
+                                if ("CENTER".equals(align)) {
+//                                    cell.setCellStyle(cellStyleCenter);
+                                }
+                                if ("LEFT".equals(align)) {
+//                                    cell.setCellStyle(cellStyleLeft);
+                                }
+                                if ("RIGHT".equals(align)) {
+//                                    cell.setCellStyle(cellStyleRight);
+                                }
+
+                                j++;
+                            }
+                        }
+                        if (item.getCustomColumnWidth() != null && item.getCustomColumnWidth().length > 0) {
+                            int b = 1;
+                            int size = 0;
+                            if (item.getCustomColumnWidth().length % 2 == 0) {
+                                size = item.getCustomColumnWidth().length / 2;
+                            } else {
+                                size = (item.getCustomColumnWidth().length / 2) + 1;
+                            }
+                            for (int a = 1; a < size; a++) {
+                                CellRangeAddress cellRangeAddress = new CellRangeAddress(row.getRowNum(),
+                                        row.getRowNum(), b, b + 1);
+                                if (b == 1) {
+                                    b = a + 2;
+                                } else {
+                                    b += 2;
+                                }
+                                sheet.addMergedRegion(cellRangeAddress);
+                                RegionUtil
+                                        .setBorderBottom(BorderStyle.THIN, cellRangeAddress, sheet);
+                                RegionUtil
+                                        .setBorderLeft(BorderStyle.THIN, cellRangeAddress, sheet);
+                                RegionUtil
+                                        .setBorderRight(BorderStyle.THIN, cellRangeAddress, sheet);
+                                RegionUtil
+                                        .setBorderTop(BorderStyle.THIN, cellRangeAddress, sheet);
                             }
                         }
                     }
@@ -340,11 +504,14 @@ public class CommonExport {
 
                 // </editor-fold>
             }
+            // </editor-fold>
 
-            //Remove sheet index(0)
+            // <editor-fold defaultstate="collapsed" desc="remove index sheet">
             if (exportChart == null || exportChart.length == 0) {
                 workbook.removeSheetAt(0);
             }
+            // </editor-fold>
+
             try {
                 FileOutputStream fileOut = new FileOutputStream(pathOut);
                 workbook.write(fileOut);
@@ -388,12 +555,12 @@ public class CommonExport {
         return new File(pathOut);
     }
 
-    public static double replateNumberValue(String modul, Object valueReplace, List<String> more, int index) {
+    public static double replaceNumberValue(String modul, Object valueReplace, List<String> more, int index) {
         double valueReturn = 0;
         return valueReturn;
     }
 
-    public static String replateStringValue(String modul, Object valueReplace, List<String> more, int index) {
+    public static String replaceStringValue(String modul, Object valueReplace, List<String> more, int index) {
         String valueReturn = "";
         return valueReturn;
     }
