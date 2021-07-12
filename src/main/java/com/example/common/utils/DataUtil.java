@@ -1,14 +1,29 @@
 package com.example.common.utils;
 
+import com.google.common.base.Splitter;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
 public class DataUtil {
+
+    public static List<String> splitDot(String input) {
+        return Splitter.on(".").trimResults().omitEmptyStrings().splitToList(input);
+    }
+
+    public static List<String> splitCharE(String input) {
+        return Splitter.on("E").trimResults().omitEmptyStrings().splitToList(input);
+    }
 
     public static boolean isNullOrEmpty(Collection<?> collection) {
         if (collection == null || collection.isEmpty()) {
@@ -49,19 +64,75 @@ public class DataUtil {
         return "%" + obj + "%";
     }
 
+    /**
+    * chuyển Date sang String
+    * @param date Date ngày cần chuyển
+     * @return String yyyy-MM-dd hh:mm:ss
+     **/
     public static String convertDateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return dateFormat.format(date);
     }
 
+    /**
+     * chuyển Date sang String
+     * @param date Date ngày cần chuyển
+     * @return String yyyy-MM-dd
+     **/
     public static String dateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(date);
     }
 
-    public static Date stringToDate(String date) throws ParseException {
+    /**
+     * chuyển String sang Date
+     * @param input String ngày cần chuyển
+     * @return Date yyyy-MM-dd hh:mm:ss
+     **/
+    public static Date convertStringToDate(String input) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return dateFormat.parse(input);
+    }
+
+    /**
+     * chuyển String sang Date dd/MM/yyyy
+     * @param input String ngày cần chuyển
+     * @return Date dd/MM/yyyy hh:mm:ss
+     **/
+    public static Date convertStringToDateddMMyyy(String input) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.parse(input);
+    }
+
+    /**
+     * chuyển String sang Date
+     * @param input String ngày cần chuyển
+     * @return Date yyyy-MM-dd
+     **/
+    public static Date stringToDate(String input) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.parse(date);
+        return dateFormat.parse(input);
+    }
+
+    /**
+     * Kiểm tra định dạng Date
+     * @param input String ngày cần kiểm tra
+     * @return boolean valid
+     **/
+    public static boolean isValidDate(final String input) {
+        boolean valid = false;
+        try {
+            // ResolverStyle.STRICT for 30, 31 days checking, and also leap year.
+            LocalDate.parse(input,
+                    DateTimeFormatter.ofPattern("uuuu-M-d")
+                            .withResolverStyle(ResolverStyle.STRICT)
+            );
+            valid = true;
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            valid = false;
+        }
+        return valid;
     }
 
     public static String removeSeparator(String url) {
@@ -70,6 +141,6 @@ public class DataUtil {
     }
 
     public static String replaceSeparator(String url) {
-        return url.replaceAll( Matcher.quoteReplacement("\\"), "/");
+        return url.replaceAll(Matcher.quoteReplacement("\\"), "/");
     }
 }

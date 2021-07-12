@@ -5,9 +5,7 @@ import com.example.common.config.ConfigHeaderExport;
 import com.example.common.utils.DataUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
@@ -563,5 +561,75 @@ public class CommonExport {
     public static String replaceStringValue(String modul, Object valueReplace, List<String> more, int index) {
         String valueReturn = "";
         return valueReturn;
+    }
+
+
+    /**
+     * Thêm comment cho header
+     *
+     * @param workbook
+     * @param headerCell
+     * @param col        vị trí cột cần set comment
+     * @param content    nội dung comment
+     */
+    public static Comment setCommentHeader(XSSFWorkbook workbook, Cell headerCell, int col,
+                                           String content) {
+        Drawing drawing = headerCell.getSheet().createDrawingPatriarch();
+        CreationHelper factory = workbook.getCreationHelper();
+        ClientAnchor anchor = factory.createClientAnchor();
+        anchor.setCol1(col + 1);
+        anchor.setCol2(col + 2);
+        anchor.setRow1(3);
+        anchor.setRow2(4);
+        Comment comment = drawing.createCellComment(anchor);
+        comment.setString(factory.createRichTextString(content));
+        return comment;
+    }
+
+    public static List<ConfigHeaderExport> readerHeaderSheet(String... col) {
+        List<ConfigHeaderExport> configHeaderExports = new ArrayList<>();
+        for (int i = 0; i < col.length; i++) {
+            configHeaderExports.add((new ConfigHeaderExport(col[i]
+                    , "LEFT"
+                    , false
+                    , 0
+                    , 0
+                    , new String[]{}
+                    , new String[]{}
+                    , "STRING")));
+        }
+        return configHeaderExports;
+    }
+
+    /**
+     * Kiểm tra định dạng header của file template
+     *
+     * @param headerList     List giá trị header lấy từ file
+     * @param totalColumn    int tổng số cột
+     * @param headerNameList List giá trị header cần đối chiếu
+     **/
+    public static boolean validFileFormat(List<Object[]> headerList, int totalColumn, List<String> headerNameList) {
+        Object[] objects = headerList.get(0);
+        if (objects == null) {
+            return false;
+        }
+        int count = 0;
+        for (Object data : objects) {
+            if (data != null) {
+                count += 1;
+            }
+        }
+        if (count != totalColumn) {
+            return false;
+        }
+        if (objects[0] == null) {
+            return false;
+        }
+        for (int i = 0; i < headerNameList.size(); i++) {
+            if (!headerNameList.get(i).equalsIgnoreCase(objects[i].toString().trim())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

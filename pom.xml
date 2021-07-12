@@ -25,6 +25,9 @@
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
         <jjwt.version>0.9.1</jjwt.version>
         <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
+        <commons.validator.version>1.7</commons.validator.version>
+        <swagger.ui.version>3.0.0</swagger.ui.version>
+        <google.guava.version>30.1.1-jre</google.guava.version>
     </properties>
 
     <dependencies>
@@ -118,8 +121,19 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.10.5</version>
+            <version>${swagger.ui.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>${commons.validator.version}</version>
+        </dependency>
+
 
     </dependencies>
 

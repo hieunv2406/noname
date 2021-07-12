@@ -49,12 +49,12 @@ public class AuthController {
         resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);
         if (userRepository.existsByUsername(userDto.getUsername())) {
             resultInsideDTO.setKey(Constants.RESPONSE_KEY.ERROR);
-            resultInsideDTO.setMessages("Error: Username is already taken!");
+            resultInsideDTO.setMessage("Error: Username is already taken!");
             return new ResponseEntity<>(resultInsideDTO, HttpStatus.BAD_REQUEST);
         }
         if (userRepository.existsByEmail(userDto.getEmail())) {
             resultInsideDTO.setKey(Constants.RESPONSE_KEY.ERROR);
-            resultInsideDTO.setMessages("Error: Email is already in use!");
+            resultInsideDTO.setMessage("Error: Email is already in use!");
             return new ResponseEntity<>(resultInsideDTO, HttpStatus.BAD_REQUEST);
         }
         // Create new user's account

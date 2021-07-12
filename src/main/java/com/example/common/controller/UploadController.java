@@ -28,10 +28,10 @@ public class UploadController {
         ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
         try {
             filesStorageService.store(file);
-            resultInsideDTO.setMessages("Uploaded the file successfully: " + file.getOriginalFilename());
+            resultInsideDTO.setMessage("Uploaded the file successfully: " + file.getOriginalFilename());
             return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
         } catch (Exception e) {
-            resultInsideDTO.setMessages("Could not upload the file: " + file.getOriginalFilename() + "!");
+            resultInsideDTO.setMessage("Could not upload the file: " + file.getOriginalFilename() + "!");
             return new ResponseEntity<>(resultInsideDTO, HttpStatus.EXPECTATION_FAILED);
         }
     }

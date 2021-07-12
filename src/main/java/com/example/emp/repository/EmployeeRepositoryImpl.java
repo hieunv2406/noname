@@ -38,6 +38,16 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
     }
 
     @Override
+    public ResultInsideDTO insertEmployeeList(List<EmployeeDTO> employeeDTOList) {
+        ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
+        resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);
+        for (EmployeeDTO employeeDTO : employeeDTOList) {
+            getEntityManager().merge(employeeDTO.toEntity());
+        }
+        return resultInsideDTO;
+    }
+
+    @Override
     public ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO) {
         ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
         resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);

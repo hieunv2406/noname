@@ -25,5 +25,6 @@ public class BaseDTO {
     private Map<String, Object> parameters;
     private String searchAll;
     private String proxyLocale;
+    private String resultImport;
 
 }

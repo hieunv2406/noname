@@ -3,6 +3,7 @@ package com.example.emp.business;
 import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.emp.data.dto.EmployeeDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
@@ -27,4 +28,5 @@ public interface EmployeeBusiness {
 
     File getTemplate() throws Exception;
 
+    ResultInsideDTO importData(MultipartFile fileImport) throws Exception;
 }

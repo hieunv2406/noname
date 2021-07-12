@@ -1,15 +1,17 @@
 package com.example.emp.business;
 
-import com.example.common.CommonExport;
-import com.example.common.I18n;
+import com.example.common.*;
 import com.example.common.config.CellConfigExport;
 import com.example.common.config.ConfigFileExport;
 import com.example.common.config.ConfigHeaderExport;
 import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
+import com.example.common.utils.DataUtil;
+import com.example.common.utils.FileUtil;
 import com.example.emp.data.dto.EmployeeDTO;
 import com.example.emp.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.validator.GenericValidator;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.InputStream;
@@ -79,336 +82,103 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
 
     @Override
     public File getTemplate() throws Exception {
-            ExcelWriterUtils excelWriterUtils = new ExcelWriterUtils();
-            String templatePathOut = "templates" + File.separator + "TEMPLATE_EXPORT.xlsx";
-            templatePathOut = StringUtils.removeSeparator(templatePathOut);
-            Resource resource = new ClassPathResource(templatePathOut);
-            InputStream fileTemplate = resource.getInputStream();
+        ExportExcel exportExcel = new ExportExcel();
+        String templatePathOut = "template" + File.separator + "TEMPLATE_EXPORT.xlsx";
+//      templatePathOut = StringUtils.removeSeparator(templatePathOut);
+        Resource resource = new ClassPathResource(templatePathOut);
+        InputStream fileTemplate = resource.getInputStream();
 
-            //apache POI XSSF
-            XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
-            XSSFSheet sheetOne = workbook.getSheetAt(0);
-            XSSFSheet sheetParam = workbook.createSheet("param");
-            XSSFSheet sheetParam2 = workbook.createSheet("param2");
-            XSSFSheet sheetParam3 = workbook.createSheet("param3");
-            //Tạo 1 mảng lưu header từng cột
-            String[] header = new String[]{
-                    I18n.getLanguage("common.STT"),
-                    I18n.getLanguage("mrDevice.deviceIdStr"),
-                    I18n.getLanguage("mrDevice.marketName"),
-                    I18n.getLanguage("mrDevice.regionHard"),
-                    I18n.getLanguage("mrDevice.arrayCodeStr"),
-                    I18n.getLanguage("mrDevice.networkTypeStr"),
-                    I18n.getLanguage("mrDevice.deviceTypeStr"),
-                    I18n.getLanguage("mrDevice.nodeIp"),
-                    I18n.getLanguage("mrDevice.nodeCode"),
-                    I18n.getLanguage("mrDevice.deviceName"),
-                    I18n.getLanguage("mrDevice.vendor"),
-                    I18n.getLanguage("mrDevice.statusStr"),
-                    I18n.getLanguage("mrDevice.dateIntegrated"),
-                    I18n.getLanguage("mrDevice.stationCode"),
-                    I18n.getLanguage("mrDevice.userMrHard"),
-                    I18n.getLanguage("mrDevice.mrConfirmHardStr"),
-                    I18n.getLanguage("mrDevice.mrHardStr"),
-                    I18n.getLanguage("mrDevice.boUnitHard"),
-                    I18n.getLanguage("mrDevice.mrTypeStr")
-            };
-            //Tiêu đề đánh dấu *
-            String[] headerStar = new String[]{
-                    I18n.getLanguage("mrDevice.marketName"),
-                    I18n.getLanguage("mrDevice.arrayCodeStr"),
-                    I18n.getLanguage("mrDevice.networkTypeStr"),
-                    I18n.getLanguage("mrDevice.deviceTypeStr"),
-                    I18n.getLanguage("mrDevice.nodeCode"),
-                    I18n.getLanguage("mrDevice.deviceName"),
-                    I18n.getLanguage("mrDevice.vendor"),
-                    I18n.getLanguage("mrDevice.statusStr"),
-                    I18n.getLanguage("mrDevice.mrHardStr")
-            };
+        //apache POI XSSF
+        XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
+        XSSFSheet sheetOne = workbook.getSheetAt(0);
+        XSSFSheet sheetParam = workbook.createSheet("param");
+        //Tạo 1 mảng lưu header từng cột
+        String[] header = new String[]{
+                I18n.getLanguage("language.common.stt"),
+                I18n.getLanguage("language.employee.code"),
+                I18n.getLanguage("language.employee.username"),
+                I18n.getLanguage("language.employee.fullName"),
+                I18n.getLanguage("language.employee.email"),
+                I18n.getLanguage("language.employee.birthday"),
+                I18n.getLanguage("language.employee.genderStr"),
+                I18n.getLanguage("language.employee.address")
+        };
+        //Tiêu đề đánh dấu *
+        String[] headerStar = new String[]{
+                I18n.getLanguage("language.employee.code"),
+                I18n.getLanguage("language.employee.username"),
+                I18n.getLanguage("language.employee.fullName"),
+                I18n.getLanguage("language.employee.email")
+        };
+        XSSFDataValidationHelper dataValidationHelper = new XSSFDataValidationHelper(sheetOne);
+        List<String> listHeader = Arrays.asList(header);
+        List<String> listHeaderStar = Arrays.asList(headerStar);
 
-            XSSFDataValidationHelper dataValidationHelper = new XSSFDataValidationHelper(sheetOne);
-            List<String> listHeader = Arrays.asList(header);
-            List<String> listHeaderStar = Arrays.asList(headerStar);
+        //lấy styles
+//            Map<String, CellStyle> style = CommonExport.createStyles(workbook);
 
-            int marketNameColumn = listHeader
-                    .indexOf(I18n.getLanguage("mrDevice.marketName"));
-            int arrayCodeStrColumn = listHeader.indexOf(I18n.getLanguage("mrDevice.arrayCodeStr"));
-            int statusStrColumn = listHeader.indexOf(I18n.getLanguage("mrDevice.statusStr"));
-            int mrConfirmHardStrColumn = listHeader.indexOf(I18n.getLanguage("mrDevice.mrConfirmHardStr"));
-            int mrHardStrColumn = listHeader.indexOf(I18n.getLanguage("mrDevice.mrHardStr"));
-            int mrTypeStrColumn = listHeader.indexOf(I18n.getLanguage("mrDevice.mrTypeStr"));
+        //Tạo tiêu đề
+        sheetOne.addMergedRegion(new CellRangeAddress(2, 2, 0, listHeader.size() - 1));
+        Row titleRow = sheetOne.createRow(2);
+        titleRow.setHeightInPoints(25);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue(I18n.getLanguage("language.employee.title"));
+//      titleCell.setCellStyle(style.get("title"));
 
-            Map<String, CellStyle> style = CommonExport.createStyles(workbook);
-            //Tạo tiêu đề
-            sheetOne.addMergedRegion(new CellRangeAddress(2, 2, 0, listHeader.size() - 1));
-            Row titleRow = sheetOne.createRow(2);
-            titleRow.setHeightInPoints(25);
-            Cell titleCell = titleRow.createCell(0);
-            titleCell.setCellValue(I18n.getLanguage("mrDevice.title"));
-            titleCell.setCellStyle(style.get("title"));
+        //Tạo font và set màu cho header
+        XSSFFont starFont = workbook.createFont();
+        starFont.setColor(IndexedColors.RED.getIndex());
 
-            XSSFFont starFont = workbook.createFont();
-            starFont.setColor(IndexedColors.RED.getIndex());
-
-            //Tạo Header
-
-            Row headerRow = sheetOne.createRow(4);
-            Row headerArray = sheetParam2.createRow(0);
-            Row headerUnit = sheetParam3.createRow(0);
-            headerRow.setHeightInPoints(30);
-            for (int i = 0; i < listHeader.size(); i++) {
-                Cell headerCell = headerRow.createCell(i);
-                XSSFRichTextString richTextString = new XSSFRichTextString(listHeader.get(i));
-                for (String headerCheck : listHeaderStar) {
-                    if (headerCheck.equalsIgnoreCase(listHeader.get(i))) {
-                        richTextString.append("*", starFont);
-                    }
-                }
-                if (i == 12) {
-                    headerCell.setCellComment(
-                            setCommentHeader(workbook, headerCell, i, "Nhập định dạng dd/MM/yyyy HH24:mm:ss"));
-                }
-                if (i == 17) {
-                    headerCell.setCellComment(setCommentHeader(workbook, headerCell, i, "Nhập ID đơn vị"));
-                }
-                headerCell.setCellValue(richTextString);
-                headerCell.setCellStyle(style.get("header"));
-                sheetOne.setColumnWidth(i, 7000);
-            }
-
-            Cell headerCellUnitId = headerUnit.createCell(0);
-            Cell headerCellUnit = headerUnit.createCell(1);
-            XSSFRichTextString unitId = new XSSFRichTextString(I18n.getLanguage("mrDevice.unitId"));
-            XSSFRichTextString unit = new XSSFRichTextString(I18n.getLanguage("mrDevice.unitName"));
-            headerCellUnit.setCellValue(unit);
-            headerCellUnit.setCellStyle(style.get("header"));
-            headerCellUnitId.setCellValue(unitId);
-            headerCellUnitId.setCellStyle(style.get("header"));
-
-            Cell headerCellArray = headerArray.createCell(0);
-            Cell headerCellNetwork = headerArray.createCell(1);
-            Cell headerCellDevice = headerArray.createCell(2);
-            XSSFRichTextString array = new XSSFRichTextString(
-                    I18n.getLanguage("mrDevice.arrayCodeStr"));
-            XSSFRichTextString network = new XSSFRichTextString(
-                    I18n.getLanguage("mrDevice.networkTypeStr"));
-            XSSFRichTextString device = new XSSFRichTextString(
-                    I18n.getLanguage("mrDevice.deviceType"));
-            headerCellArray.setCellValue(array);
-            headerCellArray.setCellStyle(style.get("header"));
-            headerCellNetwork.setCellValue(network);
-            headerCellNetwork.setCellStyle(style.get("header"));
-            headerCellDevice.setCellValue(device);
-            headerCellDevice.setCellStyle(style.get("header"));
-            sheetParam2.setColumnWidth(0, 15000);
-            sheetParam2.setColumnWidth(1, 15000);
-            sheetParam2.setColumnWidth(2, 15000);
-            sheetOne.setColumnWidth(0, 3000);
-
-            // Set dữ liệu vào column dropdown
-            int row = 5;
-            List<ItemDataCRInside> lstMarketCode = catLocationBusiness
-                    .getListLocationByLevelCBB(null, 1L, null);
-            for (ItemDataCRInside dto : lstMarketCode) {
-                excelWriterUtils
-                        .createCell(sheetParam, 2, row++, dto.getDisplayStr(), style.get("cell"));
-            }
-            sheetParam.autoSizeColumn(1);
-            Name marketName = workbook.createName();
-            marketName.setNameName("marketName");
-            marketName.setRefersToFormula("param!$C$2:$C$" + row);
-            XSSFDataValidationConstraint marketNameConstraint = new XSSFDataValidationConstraint(
-                    DataValidationConstraint.ValidationType.LIST, "marketName");
-            CellRangeAddressList marketNameCreate = new CellRangeAddressList(5, 65000,
-                    marketNameColumn,
-                    marketNameColumn);
-            XSSFDataValidation dataValidationMarketName = (XSSFDataValidation) dataValidationHelper
-                    .createValidation(
-                            marketNameConstraint, marketNameCreate);
-            dataValidationMarketName.setShowErrorBox(true);
-            sheetOne.addValidationData(dataValidationMarketName);
-
-            row = 5;
-            List<CatItemDTO> lstArrayCode = mrCfgProcedureCDBusiness.getMrSubCategory();
-            for (CatItemDTO dto : lstArrayCode) {
-                excelWriterUtils
-                        .createCell(sheetParam, 4, row++, dto.getItemName(), style.get("cell"));
-            }
-            sheetParam.autoSizeColumn(1);
-            Name arrayCodeStr = workbook.createName();
-            arrayCodeStr.setNameName("arrayCodeStr");
-            arrayCodeStr.setRefersToFormula("param!$E$2:$E$" + row);
-            XSSFDataValidationConstraint arrayCodeStrConstraint = new XSSFDataValidationConstraint(
-                    DataValidationConstraint.ValidationType.LIST, "arrayCodeStr");
-            CellRangeAddressList arrayCodeStrCreate = new CellRangeAddressList(5, 65000, arrayCodeStrColumn,
-                    arrayCodeStrColumn);
-            XSSFDataValidation dataValidationArrayCodeStr = (XSSFDataValidation) dataValidationHelper
-                    .createValidation(
-                            arrayCodeStrConstraint, arrayCodeStrCreate);
-            dataValidationArrayCodeStr.setShowErrorBox(true);
-            sheetOne.addValidationData(dataValidationArrayCodeStr);
-
-            row = 1;
-            List<MrDeviceDTO> lstANT = mrDeviceRepository.getMrDeviceByA_N_T();
-            Map<String, String> mapAN = new HashMap<>();
-            Map<String, String> mapANT = new HashMap<>();
-            Map<String, String> mapArrCodeEN = new HashMap<>();
-            for (CatItemDTO dto : lstArrayCode) {
-                mapArrCodeEN.put(dto.getItemValue(), dto.getItemName());
-            }
-            if (lstANT != null && !lstANT.isEmpty()) {
-                for (MrDeviceDTO item : lstANT) {
-                    if (!mapAN.containsKey(item.getArrayCode())) {
-                        if (row > 1) {
-                            excelWriterUtils
-                                    .createCell(sheetParam2, 0, row, "", style.get("header"));
-                            excelWriterUtils
-                                    .createCell(sheetParam2, 1, row, "", style.get("header"));
-                            excelWriterUtils
-                                    .createCell(sheetParam2, 2, row, "", style.get("header"));
-                            row++; // them ngan cach
-                        }
-                        String valueDefault = item.getArrayCode();
-                        if (mapArrCodeEN.containsKey(valueDefault)) {
-                            valueDefault = mapArrCodeEN.get(valueDefault);
-                        }
-                        excelWriterUtils
-                                .createCell(sheetParam2, 0, row, valueDefault, style.get("cell"));
-                    }
-                    if (!mapANT.containsKey(item.getArrayCode() + ";" + item.getNetworkType())) {
-                        excelWriterUtils
-                                .createCell(sheetParam2, 1, row, item.getNetworkType(), style.get("cell"));
-                    }
-                    excelWriterUtils
-                            .createCell(sheetParam2, 2, row++, item.getDeviceType(), style.get("cell"));
-                    mapAN.put(item.getArrayCode(), item.getNetworkType());
-                    mapANT.put(item.getArrayCode() + ";" + item.getNetworkType(), item.getDeviceType());
+        //Tạo Header
+        Row headerRow = sheetOne.createRow(4);
+        headerRow.setHeightInPoints(30);
+        for (int i = 0; i < listHeader.size(); i++) {
+            Cell headerCell = headerRow.createCell(i);
+            XSSFRichTextString richTextString = new XSSFRichTextString(listHeader.get(i));
+            for (String headerCheck : listHeaderStar) {
+                if (headerCheck.equalsIgnoreCase(listHeader.get(i))) {
+                    richTextString.append("*", starFont);
                 }
             }
-    /*
-    for (CatItemDTO arrayCode : lstArrayCode) {
-      List<MrDeviceDTO> lstNetwork = mrDeviceRepository
-          .getListNetworkTypeByArrayCode(arrayCode.getItemValue());
-      excelWriterUtils
-          .createCell(sheetParam2, 0, row, arrayCode.getItemName(), style.get("cell"));
-      for (MrDeviceDTO networkCode : lstNetwork) {
-        List<MrDeviceDTO> lstDeviceType = mrDeviceRepository
-            .getListDeviceTypeByNetworkType(arrayCode.getItemValue(), networkCode.getNetworkType());
-        excelWriterUtils
-            .createCell(sheetParam2, 1, row, networkCode.getNetworkType(), style.get("cell"));
-        for (MrDeviceDTO deviceType : lstDeviceType) {
-          excelWriterUtils
-              .createCell(sheetParam2, 2, row++, deviceType.getDeviceType(), style.get("cell"));
+            if (i == 1) {
+                headerCell.setCellComment(CommonExport.setCommentHeader(workbook, headerCell, i, "Nhập MaNV"));
+            }
+            headerCell.setCellValue(richTextString);
+//          headerCell.setCellStyle(style.get("header"));
+            sheetOne.setColumnWidth(i, 7000);
         }
-        excelWriterUtils
-            .createCell(sheetParam2, 0, row++, null, style.get("cell"));
-      }
-      excelWriterUtils
-          .createCell(sheetParam2, 0, row++, null, style.get("cell"));
-    }
-    */
-            sheetParam2.autoSizeColumn(0);
-            sheetParam2.autoSizeColumn(1);
 
-            row = 5;
-            excelWriterUtils.createCell(sheetParam, 11, row++, I18n.getLanguage("mrDevice.status.0")
-                    , style.get("cell"));
-            excelWriterUtils.createCell(sheetParam, 11, row++, I18n.getLanguage("mrDevice.status.1")
-                    , style.get("cell"));
-            sheetParam.autoSizeColumn(1);
-            Name statusStr = workbook.createName();
-            statusStr.setNameName("statusStr");
-            statusStr.setRefersToFormula("param!$L$2:$L$" + row);
-            XSSFDataValidationConstraint statusStrConstraint = new XSSFDataValidationConstraint(
-                    DataValidationConstraint.ValidationType.LIST, "statusStr");
-            CellRangeAddressList statusStrCreate = new CellRangeAddressList(5, 65000, statusStrColumn,
-                    statusStrColumn);
-            XSSFDataValidation dataValidationStatusStr = (XSSFDataValidation) dataValidationHelper
-                    .createValidation(
-                            statusStrConstraint, statusStrCreate);
-            dataValidationStatusStr.setShowErrorBox(true);
-            sheetOne.addValidationData(dataValidationStatusStr);
+        int row = 5;
+        int genderColumn = listHeader.indexOf(I18n.getLanguage("language.employee.genderStr"));
+        exportExcel.createCell(sheetParam, 6, row++, I18n.getLanguage("language.employee.gender.1")
+                , null);
+        exportExcel.createCell(sheetParam, 6, row++, I18n.getLanguage("language.employee.gender.0")
+                , null);
+        sheetParam.autoSizeColumn(1);
+        Name genderName = workbook.createName();
+        genderName.setNameName("genderStr");
+        genderName.setRefersToFormula("param!$G$2:$G$" + row);
+        XSSFDataValidationConstraint actionNameConstraint = new XSSFDataValidationConstraint(
+                DataValidationConstraint.ValidationType.LIST, "genderStr");
+        CellRangeAddressList actionNameCreate = new CellRangeAddressList(5, 65000, genderColumn,
+                genderColumn);
+        XSSFDataValidation dataValidationActionName = (XSSFDataValidation) dataValidationHelper
+                .createValidation(
+                        actionNameConstraint, actionNameCreate);
+        dataValidationActionName.setShowErrorBox(true);
+        sheetOne.addValidationData(dataValidationActionName);
 
-            row = 5;
-            List<MrConfigDTO> lstMrConfirmHardStr = mrScheduleTelRepository.getConfigByGroup("LY_DO_KO_BD");
-            for (MrConfigDTO dto : lstMrConfirmHardStr) {
-                excelWriterUtils
-                        .createCell(sheetParam, 15, row++, dto.getConfigName(), style.get("cell"));
-            }
-            sheetParam.autoSizeColumn(1);
-            Name mrConfirmHardStr = workbook.createName();
-            mrConfirmHardStr.setNameName("mrConfirmHardStr");
-            mrConfirmHardStr.setRefersToFormula("param!$P$2:$P$" + row);
-            XSSFDataValidationConstraint mrConfirmHardStrConstraint = new XSSFDataValidationConstraint(
-                    DataValidationConstraint.ValidationType.LIST, "mrConfirmHardStr");
-            CellRangeAddressList mrConfirmHardStrCreate = new CellRangeAddressList(5, 65000,
-                    mrConfirmHardStrColumn,
-                    mrConfirmHardStrColumn);
-            XSSFDataValidation dataValidationMrConfirmHardStr = (XSSFDataValidation) dataValidationHelper
-                    .createValidation(
-                            mrConfirmHardStrConstraint, mrConfirmHardStrCreate);
-            dataValidationMrConfirmHardStr.setShowErrorBox(true);
-            sheetOne.addValidationData(dataValidationMrConfirmHardStr);
+        //set tên trang excel
+        workbook.setSheetName(0, I18n.getLanguage("language.employee.title"));
+        workbook.setSheetHidden(1, true);
+        sheetParam.setSelected(false);
 
-            row = 5;
-            excelWriterUtils.createCell(sheetParam, 16, row++, I18n.getLanguage("mrDevice.mrHardStr.0")
-                    , style.get("cell"));
-            excelWriterUtils.createCell(sheetParam, 16, row++, I18n.getLanguage("mrDevice.mrHardStr.1")
-                    , style.get("cell"));
-            sheetParam.autoSizeColumn(1);
-            Name mrHardStr = workbook.createName();
-            mrHardStr.setNameName("mrHardStr");
-            mrHardStr.setRefersToFormula("param!$Q$2:$Q$" + row);
-            XSSFDataValidationConstraint mrHardStrConstraint = new XSSFDataValidationConstraint(
-                    DataValidationConstraint.ValidationType.LIST, "mrHardStr");
-            CellRangeAddressList mrHardStrCreate = new CellRangeAddressList(5, 65000, mrHardStrColumn,
-                    mrHardStrColumn);
-            XSSFDataValidation dataValidationMrHardStr = (XSSFDataValidation) dataValidationHelper
-                    .createValidation(
-                            mrHardStrConstraint, mrHardStrCreate);
-            dataValidationMrHardStr.setShowErrorBox(true);
-            sheetOne.addValidationData(dataValidationMrHardStr);
-
-            row = 5;
-            excelWriterUtils.createCell(sheetParam, 18, row++, I18n.getLanguage("mrDevice.mrTypeStr.BD")
-                    , style.get("cell"));
-            sheetParam.autoSizeColumn(1);
-            Name mrTypeStr = workbook.createName();
-            mrTypeStr.setNameName("mrTypeStr");
-            mrTypeStr.setRefersToFormula("param!$S$2:$S$" + row);
-            XSSFDataValidationConstraint mrTypeStrConstraint = new XSSFDataValidationConstraint(
-                    DataValidationConstraint.ValidationType.LIST, "mrTypeStr");
-            CellRangeAddressList mrTypeStrCreate = new CellRangeAddressList(5, 65000, mrTypeStrColumn,
-                    mrTypeStrColumn);
-            XSSFDataValidation dataValidationMrTypeStr = (XSSFDataValidation) dataValidationHelper
-                    .createValidation(
-                            mrTypeStrConstraint, mrTypeStrCreate);
-            dataValidationMrTypeStr.setShowErrorBox(true);
-            sheetOne.addValidationData(dataValidationMrTypeStr);
-
-            row = 1;
-            List<UnitDTO> unitNameList = unitRepository.getListUnit(null);
-            for (UnitDTO dto : unitNameList) {
-                excelWriterUtils
-                        .createCell(sheetParam3, 0, row, dto.getUnitId().toString(), style.get("cell"));
-                excelWriterUtils.createCell(sheetParam3, 1, row++, dto.getUnitName(), style.get("cell"));
-            }
-            sheetParam.autoSizeColumn(0);
-            sheetParam.autoSizeColumn(1);
-            //set tên trang excel
-            workbook.setSheetName(0, I18n.getLanguage("mrDevice.title"));
-            workbook.setSheetName(2, I18n.getLanguage("mrDevice.arrNet"));
-            workbook.setSheetName(3, I18n.getLanguage("mrDevice.boUnitHard"));
-            workbook.setSheetHidden(1, true);
-            sheetParam.setSelected(false);
-
-            //set tên file excel
-            String fileResult = tempFolder + File.separator;
-            String fileName = "IMPORT_MR_DEVICE" + "_" + System.currentTimeMillis() + ".xlsx";
-            excelWriterUtils.saveToFileExcel(workbook, fileResult, fileName);
-            String resultPath = fileResult + fileName;
-            File fileExport = new File(resultPath);
-            return fileExport;
+        //set tên file excel
+        String fileResult = "tempFolder" + File.separator;
+        String fileName = "EMPLOYEE" + "_" + System.currentTimeMillis() + ".xlsx";
+        exportExcel.saveFileToExcel(workbook, fileResult, fileName);
+        File fileExport = new File(fileResult + fileName);
+        return fileExport;
     }
 
     private File exportTemplate(List<EmployeeDTO> dtoList, String key) throws Exception {
@@ -419,16 +189,17 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
         List<ConfigFileExport> fileExportList = new ArrayList<>();
         List<ConfigHeaderExport> headerExportList;
         if ("RESULT_IMPORT".equalsIgnoreCase(key)) {
-            headerExportList = readerHeaderSheet("code"
+            headerExportList = CommonExport.readerHeaderSheet("code"
                     , "username"
                     , "fullName"
                     , "email"
-                    , "birthday"
-                    , "gender"
-                    , "address");
+                    , "birthdayStr"
+                    , "genderStr"
+                    , "address"
+                    , "resultImport");
             fileNameOut = "EMPLOYEE_RESULT_IMPORT";
         } else {
-            headerExportList = readerHeaderSheet("code"
+            headerExportList = CommonExport.readerHeaderSheet("code"
                     , "username"
                     , "fullName"
                     , "email"
@@ -481,19 +252,202 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
         return fileExport;
     }
 
-    private List<ConfigHeaderExport> readerHeaderSheet(String... col) {
-        List<ConfigHeaderExport> configHeaderExports = new ArrayList<>();
-        for (int i = 0; i < col.length; i++) {
-            configHeaderExports.add((new ConfigHeaderExport(col[i]
-                    , "LEFT"
-                    , false
-                    , 0
-                    , 0
-                    , new String[]{}
-                    , new String[]{}
-                    , "STRING")));
+    @Override
+    public ResultInsideDTO importData(MultipartFile multipartFile) throws Exception {
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        ResultInsideDTO resultInSideDto = new ResultInsideDTO();
+        resultInSideDto.setKey(Constants.RESPONSE_KEY.SUCCESS);
+        try {
+            //Kiểm tra file đầu vào
+            if (multipartFile == null || multipartFile.isEmpty()) {
+                resultInSideDto.setKey(Constants.RESPONSE_KEY.FILE_IS_NULL);
+                return resultInSideDto;
+            } else {
+                String filePath = FileUtil
+                        .saveTempFile(multipartFile.getOriginalFilename(), multipartFile.getBytes(),
+                                "tempFolder");
+                if (!Constants.RESPONSE_KEY.SUCCESS.equals(resultInSideDto.getKey())) {
+                    return resultInSideDto;
+                }
+                File fileImport = new File(filePath);
+
+                List<Object[]> headerListInFile;
+                headerListInFile = CommonImport.getDataFromExcelFile(
+                        fileImport,
+                        0, //vị trí sheet cần đọc
+                        4, //vị trí dòng header
+                        0, //vị trí cột từ
+                        7, //vị trí cột đến
+                        1000 //giới hạn 1000 dòng
+                );
+                String[] headerNameList = new String[]{
+                        I18n.getLanguage("language.common.stt"),
+                        I18n.getLanguage("language.employee.code") + "*",
+                        I18n.getLanguage("language.employee.username") + "*",
+                        I18n.getLanguage("language.employee.fullName") + "*",
+                        I18n.getLanguage("language.employee.email") + "*",
+                        I18n.getLanguage("language.employee.birthday"),
+                        I18n.getLanguage("language.employee.genderStr"),
+                        I18n.getLanguage("language.employee.address")
+                };
+                //Kiểm tra form header có đúng chuẩn
+                if (headerListInFile.size() == 0 || !CommonExport.validFileFormat(headerListInFile, headerNameList.length, Arrays.asList(headerNameList))) {
+                    resultInSideDto.setKey(Constants.RESPONSE_KEY.FILE_INVALID_FORMAT);
+                    return resultInSideDto;
+                }
+                //Lấy dữ liệu import
+                List<Object[]> dataImportList = CommonImport.getDataFromExcelFile(
+                        fileImport,
+                        0,
+                        5,
+                        0,
+                        7,
+                        1000
+                );
+                if (dataImportList.size() > 1500) {
+                    resultInSideDto.setKey(Constants.RESPONSE_KEY.DATA_OVER);
+                    return resultInSideDto;
+                }
+                if (!dataImportList.isEmpty()) {
+                    int row = 4;
+                    int index = 0;
+                    for (Object[] obj : dataImportList) {
+                        // <editor-fold desc = "lấy dữ liệu từ file chuyển vào thuộc tính đối tượng">
+                        EmployeeDTO employeeDTO = new EmployeeDTO();
+                        if (obj[1] != null) {
+                            employeeDTO.setCode(obj[1].toString().trim());
+                        } else {
+                            employeeDTO.setCode(null);
+                        }
+                        if (obj[2] != null) {
+                            employeeDTO.setUsername(obj[2].toString().trim());
+                        } else {
+                            employeeDTO.setUsername(null);
+                        }
+                        if (obj[3] != null) {
+                            employeeDTO.setFullName(obj[3].toString().trim());
+                        } else {
+                            employeeDTO.setFullName(null);
+                        }
+                        if (obj[4] != null) {
+                            employeeDTO.setEmail(obj[4].toString().trim().toUpperCase());
+                        } else {
+                            employeeDTO.setEmail(null);
+                        }
+                        if (obj[5] != null) {
+                            employeeDTO.setBirthdayStr(obj[5].toString().trim());
+                            if (GenericValidator.isDate(obj[5].toString().trim(), I18n.getLocale())) {
+                                employeeDTO.setBirthday(DataUtil.convertStringToDateddMMyyy(obj[5].toString().trim()));
+                            } else {
+                                employeeDTO.setBirthday(null);
+                            }
+                        } else {
+                            employeeDTO.setBirthdayStr(null);
+                        }
+                        if (obj[6] != null) {
+                            employeeDTO.setGenderStr(obj[6].toString().trim());
+                            if (employeeDTO.getGenderStr().equals(I18n.getLanguage("language.employee.gender.0"))) {
+                                employeeDTO.setGender(0L);
+                            } else if (employeeDTO.getGenderStr().equals(I18n.getLanguage("language.employee.gender.1"))) {
+                                employeeDTO.setGender(1L);
+                            } else {
+                                employeeDTO.setGender(null);
+                            }
+                        } else {
+                            employeeDTO.setGenderStr(null);
+                        }
+                        if (obj[7] != null) {
+                            employeeDTO.setAddress(obj[7].toString().trim());
+                        } else {
+                            employeeDTO.setAddress(null);
+                        }
+                        // </editor-fold >
+                        EmployeeDTO employeeDTOTmp = validateImportInfo(employeeDTO, employeeDTOList);
+                        if (DataUtil.isNullOrEmpty(employeeDTOTmp.getResultImport())) {
+                            employeeDTO
+                                    .setResultImport(I18n.getLanguage("validation.common.result.import"));
+                            employeeDTOList.add(employeeDTOTmp);
+                        } else {
+                            employeeDTOList.add(employeeDTOTmp);
+                            index++;
+                        }
+                        row++;
+                    }
+                    if (index == 0) {
+                        if (!employeeDTOList.isEmpty()) {
+                            //Hàm thêm mới
+                            resultInSideDto = employeeRepository.insertEmployeeList(employeeDTOList);
+                        }
+                    } else {
+                        File fileExport = exportTemplate(employeeDTOList,
+                                Constants.RESULT_IMPORT);
+                        resultInSideDto.setKey(Constants.RESPONSE_KEY.ERROR);
+                        resultInSideDto.setFile(fileExport);
+                    }
+                } else {
+                    resultInSideDto.setKey(Constants.RESPONSE_KEY.NO_DATA);
+                    resultInSideDto.setMessage(Constants.RESPONSE_KEY.FILE_IS_NULL);
+                    File fileExport = exportTemplate(employeeDTOList,
+                            Constants.RESULT_IMPORT);
+                    resultInSideDto.setFile(fileExport);
+                    return resultInSideDto;
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            resultInSideDto.setKey(Constants.RESPONSE_KEY.ERROR);
+            resultInSideDto.setMessage(e.getMessage());
         }
-        return configHeaderExports;
+        return resultInSideDto;
     }
 
+    private EmployeeDTO validateImportInfo(EmployeeDTO employeeDTO, List<EmployeeDTO> list) {
+        if (DataUtil.isNullOrEmpty(employeeDTO.getCode())) {
+            employeeDTO.setResultImport(I18n.getLanguage("validation.employee.err.code"));
+            return employeeDTO;
+        }
+        if (DataUtil.isNullOrEmpty(employeeDTO.getUsername())) {
+            employeeDTO.setResultImport(I18n.getLanguage("validation.employee.err.username"));
+            return employeeDTO;
+        }
+        if (DataUtil.isNullOrEmpty(employeeDTO.getFullName())) {
+            employeeDTO.setResultImport(I18n.getLanguage("validation.employee.err.fullName"));
+            return employeeDTO;
+        }
+        if (DataUtil.isNullOrEmpty(employeeDTO.getEmail())) {
+            employeeDTO.setResultImport(I18n.getLanguage("validation.employee.err.email"));
+            return employeeDTO;
+        }
+        if (DataUtil.isNullOrEmpty(employeeDTO.getBirthday())) {
+            employeeDTO.setResultImport(I18n.getLanguage("validation.employee.err.birthday"));
+            return employeeDTO;
+        }
+        if (DataUtil.isNullOrEmpty(employeeDTO.getGender())) {
+            employeeDTO.setResultImport(I18n.getLanguage("validation.employee.err.gender"));
+            return employeeDTO;
+        }
+//        if (DataUtil.isNullOrEmpty(employeeDTO.getAddress())) {
+//            employeeDTO.setResultImport(I18n.getLanguage("employee.err.address"));
+//            return employeeDTO;
+//        }
+        if (!DataUtil.isNullOrEmpty(list) && list.size() > 0 && DataUtil.isNullOrEmpty(employeeDTO.getResultImport())) {
+            employeeDTO = validateDuplicate(list, employeeDTO);
+        }
+        return employeeDTO;
+    }
+
+    private EmployeeDTO validateDuplicate(List<EmployeeDTO> list, EmployeeDTO employeeDTO) {
+        for (int i = 0; i < list.size(); i++) {
+            EmployeeDTO employeeDTOTmp = list.get(i);
+            if (I18n.getLanguage("validation.common.result.import").equals(employeeDTOTmp.getResultImport())
+                    && employeeDTOTmp.getCode().equalsIgnoreCase(employeeDTO.getCode())
+                    && employeeDTOTmp.getUsername().equalsIgnoreCase(employeeDTO.getUsername())
+                    && employeeDTOTmp.getEmail().equalsIgnoreCase(employeeDTO.getEmail())) {
+                employeeDTO.setResultImport(I18n.getLanguage("validation.common.err.dup-code-in-file")
+                        .replaceAll("0", String.valueOf((i) + 1)));
+                break;
+            }
+        }
+        return employeeDTO;
+    }
 }

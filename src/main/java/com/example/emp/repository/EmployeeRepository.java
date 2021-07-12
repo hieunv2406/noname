@@ -13,6 +13,8 @@ public interface EmployeeRepository {
 
     ResultInsideDTO insertEmployee(EmployeeDTO employeeDTO);
 
+    ResultInsideDTO insertEmployeeList(List<EmployeeDTO> employeeDTOList);
+
     ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO);
 
     ResultInsideDTO deleteEmployeeById(Long employeeId);
