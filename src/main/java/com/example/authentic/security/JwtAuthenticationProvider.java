@@ -31,7 +31,7 @@ public class JwtAuthenticationProvider {
                 .setSubject((userPrincipal.getUsername()))
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + Constants.AUTH_KEY.EXPIRATION_MS))
+                .setExpiration(new Date(System.currentTimeMillis() + Constants.AUTH_KEY.EXPIRATION_MS))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
@@ -49,8 +49,8 @@ public class JwtAuthenticationProvider {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
-            return true;
+                Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+                return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {

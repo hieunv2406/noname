@@ -43,7 +43,7 @@ public class AuthController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @PostMapping(path = "/signup")
+    @PostMapping(path = "/signUp")
     public ResponseEntity<ResultInsideDTO> registerAccount(@RequestBody @Valid UserDto userDto) {
         ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
         resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);
@@ -101,7 +101,7 @@ public class AuthController {
         return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/signin")
+    @PostMapping(path = "/signIn")
     public ResponseEntity<?> loginAccount(@RequestBody UserDto userDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));

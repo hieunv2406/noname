@@ -29,6 +29,6 @@ public abstract class Constants {
     public static class AUTH_KEY {
         public static final String HEADER_KEY = "Authorization";
         public static final String PREFIX_KEY = "Bearer";
-        public static final int EXPIRATION_MS = 86400000;
+        public static final int EXPIRATION_MS = 300000;
     }
 }
