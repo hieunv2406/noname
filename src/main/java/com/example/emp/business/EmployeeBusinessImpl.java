@@ -81,6 +81,11 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
     }
 
     @Override
+    public File exportDataByTemplate(EmployeeDTO employeeDTO) throws Exception {
+        return null;
+    }
+
+    @Override
     public File getTemplate() throws Exception {
         ExportExcel exportExcel = new ExportExcel();
         String templatePathOut = "template" + File.separator + "TEMPLATE_EXPORT.xlsx";

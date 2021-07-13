@@ -26,6 +26,8 @@ public interface EmployeeBusiness {
 
     File exportData(EmployeeDTO employeeDTO) throws Exception;
 
+    File exportDataByTemplate(EmployeeDTO employeeDTO) throws Exception;
+
     File getTemplate() throws Exception;
 
     ResultInsideDTO importData(MultipartFile fileImport) throws Exception;

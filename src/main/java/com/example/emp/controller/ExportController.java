@@ -30,6 +30,10 @@ public class ExportController {
                 EmployeeDTO employeeDTO = objectMapper.readValue(stringFormJson, EmployeeDTO.class);
                 file = employeeBusiness.exportData(employeeDTO);
                 break;
+            case "EMPLOYEE_MANAGER_01":
+                EmployeeDTO employeeDTO1 = objectMapper.readValue(stringFormJson, EmployeeDTO.class);
+                file = employeeBusiness.exportDataByTemplate(employeeDTO1);
+                break;
             default:
         }
         if (file != null) {
