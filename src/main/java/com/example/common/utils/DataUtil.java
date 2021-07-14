@@ -143,4 +143,18 @@ public class DataUtil {
     public static String replaceSeparator(String url) {
         return url.replaceAll(Matcher.quoteReplacement("\\"), "/");
     }
+
+    /**
+     * Lấy ngày hiện tại dưới dạng dd_MM_yyyy_HH_mm_ss
+     * @return String strCurTimeExp
+     **/
+    public static String getCurrentTime(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat();
+        dateFormat.applyPattern("dd/MM/yyy HH:mm:ss");
+        String strCurTimeExp = dateFormat.format(new Date());
+        strCurTimeExp = strCurTimeExp.replaceAll("/", "_");
+        strCurTimeExp = strCurTimeExp.replaceAll(" ", "_");
+        strCurTimeExp = strCurTimeExp.replaceAll(":", "_");
+        return strCurTimeExp;
+    }
 }

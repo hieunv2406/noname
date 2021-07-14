@@ -22,8 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 @Slf4j
@@ -82,7 +81,71 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
 
     @Override
     public File exportDataByTemplate(EmployeeDTO employeeDTO) throws Exception {
-        return null;
+        String pathTemplate = "template" + File.separator + "emp_template.xlsx";
+        String pathOut = "tempFolder" + File.separator;
+        File folderOut = new File(pathOut);
+        if (!folderOut.exists()) {
+            folderOut.mkdir();
+        }
+        XSSFWorkbook workbook = null;
+        InputStream fileTemplate = null;
+        ExportExcel exportExcel = new ExportExcel();
+        int beginRow = 7;
+        int stt = 1;
+        try {
+            log.info("Start get template file!");
+            pathTemplate = DataUtil.replaceSeparator(pathTemplate);
+            Resource resource = new ClassPathResource(pathTemplate);
+            fileTemplate = resource.getInputStream();
+            workbook = new XSSFWorkbook(fileTemplate);
+            log.info("End get template file!");
+            XSSFSheet sheetOne = workbook.getSheetAt(0);
+            // <editor-fold desc="fill Data">
+            List<EmployeeDTO> employeeDTOList = employeeRepository.getListDataExport(employeeDTO);
+            if (!DataUtil.isNullOrEmpty(employeeDTOList) && employeeDTOList.size() > 0) {
+                for (EmployeeDTO item : employeeDTOList) {
+                    exportExcel.createCell(sheetOne, 0, beginRow, String.valueOf(stt), null);
+                    exportExcel.createCell(sheetOne, 1, beginRow, item.getCode(), null);
+                    exportExcel.createCell(sheetOne, 2, beginRow, item.getUsername(), null);
+                    exportExcel.createCell(sheetOne, 3, beginRow, item.getFullName(), null);
+                    exportExcel.createCell(sheetOne, 4, beginRow, item.getEmail(), null);
+                    exportExcel.createCell(sheetOne, 5, beginRow, DataUtil.convertDateToString(item.getBirthday()), null);
+                    exportExcel.createCell(sheetOne, 6, beginRow, item.getGenderStr(), null);
+                    exportExcel.createCell(sheetOne, 7, beginRow, item.getAddress(), null);
+                    beginRow++;
+                    stt++;
+                }
+            }
+            // </editor-fold>
+            try {
+                String fileNameOut = "EMPLOYEE_EXPORT";
+                pathOut = pathOut + fileNameOut + DataUtil.getCurrentTime() + ".xlsx";
+                FileOutputStream fileOut = new FileOutputStream(pathOut);
+                workbook.write(fileOut);
+                fileOut.flush();
+                fileOut.close();
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
+            if (fileTemplate != null) {
+                try {
+                    fileTemplate.close();
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
+        }
+        return new File(pathOut);
     }
 
     @Override
