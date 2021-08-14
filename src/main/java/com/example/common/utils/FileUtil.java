@@ -1,20 +1,16 @@
 package com.example.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
+@Slf4j
 public class FileUtil {
 
     public static ResponseEntity<Resource> responseFormFile(File file) throws Exception {
@@ -76,5 +72,23 @@ public class FileUtil {
                 + File.separator
                 + (day < 10 ? "0" + day : day);
         return pathByDate;
+    }
+
+    public static String getConfigProperties(String key) {
+        String value = null;
+        try (InputStream input = FileUtil.class.getClassLoader().getResourceAsStream("config.properties")) {
+            Properties prop = new Properties();
+            if (input == null) {
+                log.error("Sorry, unable to find config.properties");
+                return null;
+            }
+            //load a properties file from class path, inside static method
+            prop.load(input);
+            //get the property value and print it out
+            value = prop.getProperty(key);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return value;
     }
 }

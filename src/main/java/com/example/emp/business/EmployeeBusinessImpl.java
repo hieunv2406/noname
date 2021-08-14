@@ -30,6 +30,7 @@ import java.util.*;
 public class EmployeeBusinessImpl implements EmployeeBusiness {
     @Autowired
     private EmployeeRepository employeeRepository;
+    final static String tempFolder = FileUtil.getConfigProperties("tempFolder");
 
     @Override
     public EmployeeDTO findEmployeeById(Long employeeId) {
@@ -82,7 +83,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
     @Override
     public File exportDataByTemplate(EmployeeDTO employeeDTO) throws Exception {
         String pathTemplate = "template" + File.separator + "emp_template.xlsx";
-        String pathOut = "tempFolder" + File.separator;
+        String pathOut = tempFolder + File.separator;
         File folderOut = new File(pathOut);
         if (!folderOut.exists()) {
             folderOut.mkdir();
@@ -242,7 +243,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
         sheetParam.setSelected(false);
 
         //set tên file excel
-        String fileResult = "tempFolder" + File.separator;
+        String fileResult = tempFolder + File.separator;
         String fileName = "EMPLOYEE" + "_" + System.currentTimeMillis() + ".xlsx";
         exportExcel.saveFileToExcel(workbook, fileResult, fileName);
         File fileExport = new File(fileResult + fileName);
@@ -309,7 +310,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
         fileExportList.add(configFileExport);
         //cấu hình đường dẫn
         String fileTemplate = "template" + File.separator + "TEMPLATE_EXPORT.xlsx";
-        String rootPath = "tempFolder" + File.separator;
+        String rootPath = tempFolder + File.separator;
         File fileExport = CommonExport.exportExcel(
                 fileTemplate,
                 fileNameOut,
@@ -333,7 +334,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
             } else {
                 String filePath = FileUtil
                         .saveTempFile(multipartFile.getOriginalFilename(), multipartFile.getBytes(),
-                                "tempFolder");
+                                tempFolder);
                 if (!Constants.RESPONSE_KEY.SUCCESS.equals(resultInSideDto.getKey())) {
                     return resultInSideDto;
                 }
