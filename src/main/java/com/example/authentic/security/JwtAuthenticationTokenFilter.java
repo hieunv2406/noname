@@ -43,7 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                logger.error("Cannot set the Security Context");
+                logger.info("Cannot set the Security Context");
             }
         } catch (ExpiredJwtException e) {
             String isRefreshToken = httpServletRequest.getHeader("isRefreshToken");
