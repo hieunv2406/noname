@@ -1,0 +1,2057 @@
+{
+	"info": {
+		"_postman_id": "e76d5cc4-8091-4be9-9128-6fd972dea46d",
+		"name": "nonam",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Call by gateway api",
+			"item": [
+				{
+					"name": "Common Export File",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "vi-VN",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "localhost:8081/admin/commonExport/export?key=EMPLOYEE_MANAGER",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"admin",
+								"commonExport",
+								"export"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "EMPLOYEE_MANAGER"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"NV3\",\r\n    \"username\": \"nguyennv\",\r\n    \"fullName\": \"Nguyễn Văn Nguyễn\",\r\n    \"email\": \"nguyen@itsol.vn\",\r\n    \"birthday\": \"2020-12-14\",\r\n    \"gender\": 1,\r\n    \"address\": \"Cầu Giấy - Hà Nội\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/admin/employeeController/insert",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"admin",
+								"employeeController",
+								"insert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findbyid",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/admin/employeeController/getDetail?employeeId=17",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"admin",
+								"employeeController",
+								"getDetail"
+							],
+							"query": [
+								{
+									"key": "employeeId",
+									"value": "17"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "noname_single_service",
+			"item": [
+				{
+					"name": "security",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"hieu\",\r\n    \"email\": \"hieu@gmail.com\",\r\n    \"password\": \"hieu\",\r\n    \"lstRoleInput\" : [\"mod\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/api/account/signUp",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"account",
+										"signUp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/api/account/signIn",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"account",
+										"signIn"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi public",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/public/hello/all",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"public",
+										"hello",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi public Server",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "192.168.2.103:8080/demo/public/hello/all",
+									"host": [
+										"192",
+										"168",
+										"2",
+										"103"
+									],
+									"port": "8080",
+									"path": [
+										"demo",
+										"public",
+										"hello",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi private admin",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2QiLCJ1c2VySWQiOiIyIiwiZW1haWwiOiJtb2RAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYxNzE3MzksImV4cCI6MTYyNjE3MjAzOX0.Jxm0hZfShw3NJ-b6eTvCEM0_ZeU5bvKwxIT9yeNLvVQADznk6Rs_G9iuFpW2qknxCLW_IHS3GfjAnks_HGqXDQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODQ3NDksImV4cCI6MTYwOTc3MTE0OX0.FbxcGKp9JmO2Nxe-BSyD_v0LKEdRFJKMisZzSESCBC3n1e8pxI6BtgXEZYSc-9PLodVPVNhCj_rzX41oC0qR0Q"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/rest/hello/admin",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rest",
+										"hello",
+										"admin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi private admin Server",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2QiLCJ1c2VySWQiOiIyIiwiZW1haWwiOiJtb2RAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYxNzE3MzksImV4cCI6MTYyNjE3MjAzOX0.Jxm0hZfShw3NJ-b6eTvCEM0_ZeU5bvKwxIT9yeNLvVQADznk6Rs_G9iuFpW2qknxCLW_IHS3GfjAnks_HGqXDQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODQ3NDksImV4cCI6MTYwOTc3MTE0OX0.FbxcGKp9JmO2Nxe-BSyD_v0LKEdRFJKMisZzSESCBC3n1e8pxI6BtgXEZYSc-9PLodVPVNhCj_rzX41oC0qR0Q"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/rest/hello/admin",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rest",
+										"hello",
+										"admin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi private mod",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2QiLCJ1c2VySWQiOiIyIiwiZW1haWwiOiJtb2RAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYxNzE3MzksImV4cCI6MTYyNjE3MjAzOX0.Jxm0hZfShw3NJ-b6eTvCEM0_ZeU5bvKwxIT9yeNLvVQADznk6Rs_G9iuFpW2qknxCLW_IHS3GfjAnks_HGqXDQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODQ3NDksImV4cCI6MTYwOTc3MTE0OX0.FbxcGKp9JmO2Nxe-BSyD_v0LKEdRFJKMisZzSESCBC3n1e8pxI6BtgXEZYSc-9PLodVPVNhCj_rzX41oC0qR0Q"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/rest/hello/mod",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rest",
+										"hello",
+										"mod"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi private user",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODQ3NDksImV4cCI6MTYwOTc3MTE0OX0.FbxcGKp9JmO2Nxe-BSyD_v0LKEdRFJKMisZzSESCBC3n1e8pxI6BtgXEZYSc-9PLodVPVNhCj_rzX41oC0qR0Q"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/rest/hello/user",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rest",
+										"hello",
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "files",
+					"item": [
+						{
+							"name": "getListFileInfor",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/commonUpload/files",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"commonUpload",
+										"files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload file",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/hieun/Downloads/VHCM 3.0_Cham cong wifi_Clone danh muc dung chung.doc"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8080/commonUpload/upload",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"commonUpload",
+										"upload"
+									]
+								},
+								"description": "upload file"
+							},
+							"response": []
+						},
+						{
+							"name": "localhost:8080/commonExport/files",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/commonExport/files/EMPLOYEE_MANAGER",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"commonExport",
+										"files",
+										"EMPLOYEE_MANAGER"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "employee",
+					"item": [
+						{
+							"name": "download controller",
+							"item": [
+								{
+									"name": "downLoadController",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYwNjAyNzMsImV4cCI6MTYyNjE0NjY3M30.KjEI52uy5gSw5xVP58TTK5GhYNwwRiYAW1ko-pmv0GB9EI0kG-Y4cBBo7wK5WPbYnizFYJz1q0YVBDDddvPubA",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/empDownload/onDownloadFile?moduleKey=EMPLOYEE_MANAGER",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"empDownload",
+												"onDownloadFile"
+											],
+											"query": [
+												{
+													"key": "moduleKey",
+													"value": "EMPLOYEE_MANAGER"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "employee controller",
+							"item": [
+								{
+									"name": "Insert employee",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"code\": \"\",\r\n    \"username\": \"hieunv\",\r\n    \"fullName\": \"Nguyễn Văn Nguyễn\",\r\n    \"email\": \"nguyen@itsol.vn\",\r\n    \"birthday\": \"2020-05-06\",\r\n    \"gender\": 1,\r\n    \"address\": \"Cầu Giấy - Hà Nội\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/insert",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"insert"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get Detail employee",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/getDetail?employeeId=1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"getDetail"
+											],
+											"query": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getEmployeeDTO",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODk0ODEsImV4cCI6MTYwOTc3NTg4MX0.8BXZepzF62cJLnppQFwZb-2a5CWzRBWID3R4TnB3zBydqDPeUx50FnXoj9hjE0Gw7IJN1aWFyEXhV6HsxbxehQ",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\": 1,\r\n    \"pageSize\": 5,\r\n    \"sortName\": \"employeeId\",\r\n    \"sortType\": \"asc\",\r\n    \"code\": \"\",\r\n    \"username\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/getEmployeeDTO",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"getEmployeeDTO"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getListDataExport",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/getListDataExport",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"getListDataExport"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "findAll (used Map)",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/findAll",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"findAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "deleteById",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/employeeController/delete?employeeId=1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"employeeController",
+												"delete"
+											],
+											"query": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"employeeId\": 7,\r\n    \"code\": \"NV3\",\r\n    \"name\": \"nguyennv\",\r\n    \"fullName\": \"Nguyễn Văn Nguyễn\",\r\n    \"birthday\": null,\r\n    \"gender\": 1,\r\n    \"address\": \"Cầu Giấy - Hà Nội\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/employeeController/update",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"employeeController",
+												"update"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "export controller",
+							"item": [
+								{
+									"name": "exportController",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn1dLCJpYXQiOjE2Mjg5NjUwMjUsImV4cCI6MTYyODk2NTMyNX0.z79hBaajsGz5-5IFE-5eiWnbOUzf8iDCU4cHQmTlj38Z4VplnncllFL4tZeRzmJ1TKsfxWvoLHJKgPiPUs7BKw",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "en-US",
+												"description": "en-US hoặc vi-VN",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "stringFormJson",
+													"value": "{}",
+													"type": "text"
+												},
+												{
+													"key": "moduleKey",
+													"value": "EMPLOYEE_MANAGER",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/empExport/onExportFile",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"empExport",
+												"onExportFile"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "import controller",
+							"item": [
+								{
+									"name": "import controller",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYwNjAyNzMsImV4cCI6MTYyNjE0NjY3M30.KjEI52uy5gSw5xVP58TTK5GhYNwwRiYAW1ko-pmv0GB9EI0kG-Y4cBBo7wK5WPbYnizFYJz1q0YVBDDddvPubA",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "multipartFile",
+													"type": "file",
+													"src": "/Users/owl/My_project/FilesDownload/EMPLOYEE_1626060354164.xlsx"
+												},
+												{
+													"key": "moduleKey",
+													"value": "EMPLOYEE_MANAGER",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/empImport/onImportFile",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"empImport",
+												"onImportFile"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn1dLCJpYXQiOjE2MjUyMTcyMzUsImV4cCI6MTYyNTMwMzYzNX0.WDRvwRu8pMcS09f3vdgxpvx22WTCEGUmnCiZSk2AaJdCRzMYetuCyuomRqnctRKSiXoPf_OAPP_Wi2fujE1JBA",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "noname_single_service Server",
+			"item": [
+				{
+					"name": "security",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"mod\",\r\n    \"email\": \"mod@gmail.com\",\r\n    \"password\": \"mod\",\r\n    \"lstRoleInput\" : [\"mod\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "192.168.2.103:8080/demo/api/account/signUp",
+									"host": [
+										"192",
+										"168",
+										"2",
+										"103"
+									],
+									"port": "8080",
+									"path": [
+										"demo",
+										"api",
+										"account",
+										"signUp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "192.168.2.103:8080/demo/api/account/signIn",
+									"host": [
+										"192",
+										"168",
+										"2",
+										"103"
+									],
+									"port": "8080",
+									"path": [
+										"demo",
+										"api",
+										"account",
+										"signIn"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi public",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/public/hello/all",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"public",
+										"hello",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi public Server",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "192.168.2.103:8080/demo/public/hello/all",
+									"host": [
+										"192",
+										"168",
+										"2",
+										"103"
+									],
+									"port": "8080",
+									"path": [
+										"demo",
+										"public",
+										"hello",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi private admin",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2QiLCJ1c2VySWQiOiIyIiwiZW1haWwiOiJtb2RAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYxNzE3MzksImV4cCI6MTYyNjE3MjAzOX0.Jxm0hZfShw3NJ-b6eTvCEM0_ZeU5bvKwxIT9yeNLvVQADznk6Rs_G9iuFpW2qknxCLW_IHS3GfjAnks_HGqXDQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODQ3NDksImV4cCI6MTYwOTc3MTE0OX0.FbxcGKp9JmO2Nxe-BSyD_v0LKEdRFJKMisZzSESCBC3n1e8pxI6BtgXEZYSc-9PLodVPVNhCj_rzX41oC0qR0Q"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/rest/hello/admin",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rest",
+										"hello",
+										"admin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi private admin Server",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2QiLCJ1c2VySWQiOiIyIiwiZW1haWwiOiJtb2RAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYxNzE3MzksImV4cCI6MTYyNjE3MjAzOX0.Jxm0hZfShw3NJ-b6eTvCEM0_ZeU5bvKwxIT9yeNLvVQADznk6Rs_G9iuFpW2qknxCLW_IHS3GfjAnks_HGqXDQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODQ3NDksImV4cCI6MTYwOTc3MTE0OX0.FbxcGKp9JmO2Nxe-BSyD_v0LKEdRFJKMisZzSESCBC3n1e8pxI6BtgXEZYSc-9PLodVPVNhCj_rzX41oC0qR0Q"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/rest/hello/admin",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rest",
+										"hello",
+										"admin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi private mod",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2QiLCJ1c2VySWQiOiIyIiwiZW1haWwiOiJtb2RAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYxNzE3MzksImV4cCI6MTYyNjE3MjAzOX0.Jxm0hZfShw3NJ-b6eTvCEM0_ZeU5bvKwxIT9yeNLvVQADznk6Rs_G9iuFpW2qknxCLW_IHS3GfjAnks_HGqXDQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODQ3NDksImV4cCI6MTYwOTc3MTE0OX0.FbxcGKp9JmO2Nxe-BSyD_v0LKEdRFJKMisZzSESCBC3n1e8pxI6BtgXEZYSc-9PLodVPVNhCj_rzX41oC0qR0Q"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/rest/hello/mod",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rest",
+										"hello",
+										"mod"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "testApi private user",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODQ3NDksImV4cCI6MTYwOTc3MTE0OX0.FbxcGKp9JmO2Nxe-BSyD_v0LKEdRFJKMisZzSESCBC3n1e8pxI6BtgXEZYSc-9PLodVPVNhCj_rzX41oC0qR0Q"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/rest/hello/user",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rest",
+										"hello",
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "files",
+					"item": [
+						{
+							"name": "getListFileInfor",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/commonUpload/files",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"commonUpload",
+										"files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload file",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/hieun/Downloads/VHCM 3.0_Cham cong wifi_Clone danh muc dung chung.doc"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:8080/commonUpload/upload",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"commonUpload",
+										"upload"
+									]
+								},
+								"description": "upload file"
+							},
+							"response": []
+						},
+						{
+							"name": "localhost:8080/commonExport/files",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/commonExport/files/EMPLOYEE_MANAGER",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"commonExport",
+										"files",
+										"EMPLOYEE_MANAGER"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "employee",
+					"item": [
+						{
+							"name": "download controller",
+							"item": [
+								{
+									"name": "downLoadController",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn1dLCJpYXQiOjE2Mjg5NjY3NzMsImV4cCI6MTYyODk2NzA3M30.g_cNKlJOxEe1cVHGMxwqYNnpiG-kYg1aruh8htG6MzSdd9ccAaZSmhoc3dBxL-nifNoY8TEDHCrTgCCeM8jttA",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "192.168.2.103:8080/demo/mapi/empDownload/onDownloadFile?moduleKey=EMPLOYEE_MANAGER",
+											"host": [
+												"192",
+												"168",
+												"2",
+												"103"
+											],
+											"port": "8080",
+											"path": [
+												"demo",
+												"mapi",
+												"empDownload",
+												"onDownloadFile"
+											],
+											"query": [
+												{
+													"key": "moduleKey",
+													"value": "EMPLOYEE_MANAGER"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "employee controller",
+							"item": [
+								{
+									"name": "Insert employee",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"code\": \"\",\r\n    \"username\": \"hieunv\",\r\n    \"fullName\": \"Nguyễn Văn Nguyễn\",\r\n    \"email\": \"nguyen@itsol.vn\",\r\n    \"birthday\": \"2020-05-06\",\r\n    \"gender\": 1,\r\n    \"address\": \"Cầu Giấy - Hà Nội\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/insert",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"insert"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get Detail employee",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/getDetail?employeeId=1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"getDetail"
+											],
+											"query": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getEmployeeDTO",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1bnYzIiwidXNlcklkIjoiOCIsImVtYWlsIjoiaGlldW52M0BnbWFpbC5jb20iLCJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpYXQiOjE2MDk2ODk0ODEsImV4cCI6MTYwOTc3NTg4MX0.8BXZepzF62cJLnppQFwZb-2a5CWzRBWID3R4TnB3zBydqDPeUx50FnXoj9hjE0Gw7IJN1aWFyEXhV6HsxbxehQ",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"page\": 1,\r\n    \"pageSize\": 5,\r\n    \"sortName\": \"employeeId\",\r\n    \"sortType\": \"asc\",\r\n    \"code\": \"\",\r\n    \"username\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/getEmployeeDTO",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"getEmployeeDTO"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "getListDataExport",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/getListDataExport",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"getListDataExport"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "findAll (used Map)",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/employeeController/findAll",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"employeeController",
+												"findAll"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "deleteById",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/employeeController/delete?employeeId=1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"employeeController",
+												"delete"
+											],
+											"query": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "update",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"employeeId\": 7,\r\n    \"code\": \"NV3\",\r\n    \"name\": \"nguyennv\",\r\n    \"fullName\": \"Nguyễn Văn Nguyễn\",\r\n    \"birthday\": null,\r\n    \"gender\": 1,\r\n    \"address\": \"Cầu Giấy - Hà Nội\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/employeeController/update",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"employeeController",
+												"update"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "export controller",
+							"item": [
+								{
+									"name": "exportController",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn1dLCJpYXQiOjE2Mjg5Njc1NTUsImV4cCI6MTYyODk2Nzg1NX0.Nf_ObKGeKFAAX5BQ7v3pEYbZvm3yZWxzntAGbysGQtKpGaTOdOXVN0Sn5bK7fAk9ztu4bEiguOfmMrNGNFtqrQ",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "en-US",
+												"description": "en-US hoặc vi-VN",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "stringFormJson",
+													"value": "{}",
+													"type": "text"
+												},
+												{
+													"key": "moduleKey",
+													"value": "EMPLOYEE_MANAGER",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "192.168.2.103:8080/demo/mapi/empExport/onExportFile",
+											"host": [
+												"192",
+												"168",
+												"2",
+												"103"
+											],
+											"port": "8080",
+											"path": [
+												"demo",
+												"mapi",
+												"empExport",
+												"onExportFile"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjE0ODgzNzEsImV4cCI6MTYyMTU3NDc3MX0.nN3TiA4Zd7mE6WPe3eTF86p5o1xFT0q-7WKTxXjyLzmPBfeTmMpqYp0Yn7xvXKqUsZ3-eD4yvLUjgUZmppI1-g",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "import controller",
+							"item": [
+								{
+									"name": "import controller",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn1dLCJpYXQiOjE2MjYwNjAyNzMsImV4cCI6MTYyNjE0NjY3M30.KjEI52uy5gSw5xVP58TTK5GhYNwwRiYAW1ko-pmv0GB9EI0kG-Y4cBBo7wK5WPbYnizFYJz1q0YVBDDddvPubA",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "multipartFile",
+													"type": "file",
+													"src": "/Users/owl/My_project/FilesDownload/EMPLOYEE_1626060354164.xlsx"
+												},
+												{
+													"key": "moduleKey",
+													"value": "EMPLOYEE_MANAGER",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "localhost:8080/mapi/empImport/onImportFile",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"mapi",
+												"empImport",
+												"onImportFile"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInVzZXJJZCI6IjEiLCJlbWFpbCI6ImhpZXVudjI0OTZAZ21haWwuY29tIiwicm9sZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfTU9ERVJBVE9SIn0seyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn1dLCJpYXQiOjE2MjUyMTcyMzUsImV4cCI6MTYyNTMwMzYzNX0.WDRvwRu8pMcS09f3vdgxpvx22WTCEGUmnCiZSk2AaJdCRzMYetuCyuomRqnctRKSiXoPf_OAPP_Wi2fujE1JBA",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

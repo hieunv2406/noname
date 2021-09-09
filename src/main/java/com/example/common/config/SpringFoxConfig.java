@@ -35,7 +35,7 @@ public class SpringFoxConfig {
 
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("Spring Boot REST API")
-                .description("Konga REST API")
+                .description("DEMO REST API")
                 .contact(new Contact("hieunv", "", ""))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")

@@ -27,7 +27,6 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint entryPoint;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-// hiện có 2 vấn đề: thứ 2 là  khi validate token ko add dc vào jwtResponse
 
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
