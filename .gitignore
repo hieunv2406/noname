@@ -34,3 +34,4 @@ build/
 
 ### App folder ###
 tempFolder/
+node_modules/
