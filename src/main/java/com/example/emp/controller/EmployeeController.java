@@ -4,6 +4,7 @@ import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.emp.data.dto.EmployeeDTO;
 import com.example.emp.business.EmployeeBusiness;
+import com.example.feignClient.EmployeeServiceProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ import java.util.Map;
 public class EmployeeController {
     @Autowired
     EmployeeBusiness employeeBusiness;
+
+    @Autowired
+    EmployeeServiceProxy employeeServiceProxy;
 
     @PostMapping(value = "/getEmployeeDTO")
     public ResponseEntity<Datatable> getListEmployeeDTO(@RequestBody EmployeeDTO employeeDTO) {
@@ -62,6 +66,11 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeDTO>> getListDataExport(@RequestBody EmployeeDTO employeeDTO) {
         List<EmployeeDTO> employeeDTOList = employeeBusiness.getListDataExport(employeeDTO);
         return new ResponseEntity<>(employeeDTOList, HttpStatus.OK);
+    }
+    @GetMapping(value = "/getDetailProxy")
+    public ResponseEntity<EmployeeDTO> findEmployeeByIdByProxy(@RequestParam Long employeeId) {
+        EmployeeDTO employeeDTO = employeeServiceProxy.findEmployeeById(employeeId);
+        return new ResponseEntity<>(employeeDTO, HttpStatus.OK);
     }
 
 }
