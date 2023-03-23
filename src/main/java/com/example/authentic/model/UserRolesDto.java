@@ -15,12 +15,4 @@ public class UserRolesDto {
     private Long userId;
     private Long rolesId;
 
-    public UserRolesEntity toEntity() {
-        return new UserRolesEntity(
-                id,
-                userId,
-                rolesId
-        );
-    }
-
 }

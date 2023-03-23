@@ -7,25 +7,25 @@ import com.example.authentic.repository.UserRolesRepository;
 import com.example.authentic.security.JwtAuthenticationProvider;
 import com.example.common.Constants;
 import com.example.common.dto.ResultInsideDTO;
+import com.example.emp.data.dto.JwtRequest;
+import com.example.emp.data.dto.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@CrossOrigin("http://localhost:8080")
 @RestController
 @RequestMapping(path = "/api/account")
 public class AuthController {
@@ -44,78 +44,97 @@ public class AuthController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping(path = "/signUp")
-    public ResponseEntity<ResultInsideDTO> registerAccount(@RequestBody @Valid UserDto userDto) {
-        ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constants.RESPONSE_KEY.SUCCESS);
-        if (userRepository.existsByUsername(userDto.getUsername())) {
-            resultInsideDTO.setKey(Constants.RESPONSE_KEY.ERROR);
-            resultInsideDTO.setMessage("Error: Username is already taken!");
-            return new ResponseEntity<>(resultInsideDTO, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ResultInsideDTO> registerAccount(@RequestBody @Valid UserRequest userRequest) {
+        ResultInsideDTO resultDTO = new ResultInsideDTO();
+        Map<String, String> errors = new HashMap<>();
+        resultDTO.setKey(Constants.ResponseKey.SUCCESS);
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(userRequest.getUsername()))) {
+            errors.put("username", "is already taken!");
+            resultDTO.setKey(Constants.ResponseKey.ERROR);
+            resultDTO.setErrors(errors);
+            return new ResponseEntity<>(resultDTO, HttpStatus.BAD_REQUEST);
         }
-        if (userRepository.existsByEmail(userDto.getEmail())) {
-            resultInsideDTO.setKey(Constants.RESPONSE_KEY.ERROR);
-            resultInsideDTO.setMessage("Error: Email is already in use!");
-            return new ResponseEntity<>(resultInsideDTO, HttpStatus.BAD_REQUEST);
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(userRequest.getEmail()))) {
+            errors.put("email", "is already in use!");
+            resultDTO.setKey(Constants.ResponseKey.ERROR);
+            resultDTO.setErrors(errors);
+            return new ResponseEntity<>(resultDTO, HttpStatus.BAD_REQUEST);
         }
         // Create new user's account
-        UserDto user = new UserDto(userDto.getUsername(),
-                passwordEncoder.encode(userDto.getPassword()), userDto.getEmail());
+        final String errorContent = "Error: Role is not found.";
         Set<String> strRoles = new HashSet<>();
-        for (String role : userDto.getLstRoleInput()) {
-            strRoles.add(role);
-        }
-        Set<RolesDto> roles = new HashSet<>();
-        if (strRoles == null) {
-            RolesEntity userRole = rolesRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole.toDTO());
+        Set<RoleEntity> roles = new HashSet<>();
+        if (userRequest.getRoleInputList() == null || userRequest.getRoleInputList() != null && userRequest.getRoleInputList().length == 0) {
+            RoleEntity userRole = rolesRepository.findByCode(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException(errorContent));
+            roles.add(userRole);
         } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        RolesEntity adminRole = rolesRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole.toDTO());
-
-                        break;
-                    case "mod":
-                        RolesEntity modRole = rolesRepository.findByName(ERole.ROLE_MODERATOR)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole.toDTO());
-
-                        break;
-                    default:
-                        RolesEntity userRole = rolesRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole.toDTO());
-                }
-            });
+            Collections.addAll(strRoles, userRequest.getRoleInputList());
         }
-        UserEntity userEntity = userRepository.save(user.toEntity());
-        roles.forEach(rolesDto -> {
-            UserRolesEntity userRolesEntity = new UserRolesEntity();
-            userRolesEntity.setRolesId(rolesDto.getId());
-            userRolesEntity.setUserId(userEntity.getId());
-            userRolesRepository.save(userRolesEntity);
+        strRoles.add(ERole.ROLE_USER.name());
+        strRoles.forEach(role -> {
+            switch (role.toLowerCase(Locale.ROOT)) {
+                case "admin":
+                    RoleEntity adminRole = rolesRepository.findByCode(ERole.ROLE_ADMIN)
+                            .orElseThrow(() -> new RuntimeException(errorContent));
+                    roles.add(adminRole);
+
+                    break;
+                case "mod":
+                    RoleEntity modRole = rolesRepository.findByCode(ERole.ROLE_MODERATOR)
+                            .orElseThrow(() -> new RuntimeException(errorContent));
+                    roles.add(modRole);
+
+                    break;
+                default:
+                    RoleEntity userRole = rolesRepository.findByCode(ERole.ROLE_USER)
+                            .orElseThrow(() -> new RuntimeException(errorContent));
+                    roles.add(userRole);
+            }
         });
-        return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
+        UserEntity user = new UserEntity();
+        user.setUsername(userRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
+        user.setEmail(userRequest.getEmail());
+        user.setPhoneNumber(userRequest.getPhoneNumber());
+        user.setAddress(userRequest.getAddress());
+        UserEntity finalUser = userRepository.save(user);
+        roles.forEach(role -> {
+            UserRoleEntity userRoleEntity = new UserRoleEntity();
+            userRoleEntity.setRole(role);
+            userRoleEntity.setUser(finalUser);
+            userRolesRepository.save(userRoleEntity);
+        });
+
+
+        return new ResponseEntity<>(resultDTO, HttpStatus.OK);
     }
 
     @PostMapping(path = "/signIn")
-    public ResponseEntity<?> loginAccount(@RequestBody UserDto userDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtAuthenticationProvider.generateJwtToken(authentication);
-        JwtUserDetails userDetails = (JwtUserDetails) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles), HttpStatus.OK);
+    public ResponseEntity<ResultInsideDTO> loginAccount(@RequestBody @Valid JwtRequest jwtRequest) {
+        ResultInsideDTO resultDto = new ResultInsideDTO(Constants.ResponseKey.SUCCESS);
+        Map<String, String> errors = new HashMap<>();
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtAuthenticationProvider.generateJwtToken(authentication);
+            JwtUserDetails userDetails = (JwtUserDetails) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+            resultDto.setObject(new JwtResponse(jwt,
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles));
+        } catch (AuthenticationException ex) {
+            resultDto.setKey(Constants.ResponseKey.ERROR);
+            errors.put("error", ex.getMessage());
+            resultDto.setErrors(errors);
+        }
+        return new ResponseEntity<>(resultDto, HttpStatus.OK);
     }
 
 }

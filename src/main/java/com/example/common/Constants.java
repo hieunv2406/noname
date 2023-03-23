@@ -1,12 +1,10 @@
 package com.example.common;
 
-import ch.qos.logback.core.util.COWArrayList;
-
 public abstract class Constants {
     public static final String TYPE_NUMBER = "LONG,INTEGER,SHORT,BYTE,INT,DOUBLE,FLOAT";
     public static final String RESULT_IMPORT = "RESULT_IMPORT";
 
-    public static class RESPONSE_KEY {
+    public static class ResponseKey {
         public static final String SUCCESS = "SUCCESS";
         public static final String DELETE_SUCCESS = "DELETE_SUCCESS";
         public static final String ERROR = "ERROR";
@@ -22,11 +20,11 @@ public abstract class Constants {
         public static final String NO_DATA = "NO_DATA";
     }
 
-    public static class SEQUENCE_KEY {
+    public static class SequenceKey {
         public static final String EMPLOYEE = "EMPLOYEE_SEQ";
     }
 
-    public static class AUTH_KEY {
+    public static class AuthKey {
         public static final String HEADER_KEY = "Authorization";
         public static final String PREFIX_KEY = "Bearer";
         public static final int EXPIRATION_MS = 300000;

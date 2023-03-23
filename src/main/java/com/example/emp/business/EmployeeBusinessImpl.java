@@ -325,17 +325,17 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
     public ResultInsideDTO importData(MultipartFile multipartFile) throws Exception {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
         ResultInsideDTO resultInSideDto = new ResultInsideDTO();
-        resultInSideDto.setKey(Constants.RESPONSE_KEY.SUCCESS);
+        resultInSideDto.setKey(Constants.ResponseKey.SUCCESS);
         try {
             //Kiểm tra file đầu vào
             if (multipartFile == null || multipartFile.isEmpty()) {
-                resultInSideDto.setKey(Constants.RESPONSE_KEY.FILE_IS_NULL);
+                resultInSideDto.setKey(Constants.ResponseKey.FILE_IS_NULL);
                 return resultInSideDto;
             } else {
                 String filePath = FileUtil
                         .saveTempFile(multipartFile.getOriginalFilename(), multipartFile.getBytes(),
                                 tempFolder);
-                if (!Constants.RESPONSE_KEY.SUCCESS.equals(resultInSideDto.getKey())) {
+                if (!Constants.ResponseKey.SUCCESS.equals(resultInSideDto.getKey())) {
                     return resultInSideDto;
                 }
                 File fileImport = new File(filePath);
@@ -361,7 +361,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                 };
                 //Kiểm tra form header có đúng chuẩn
                 if (headerListInFile.size() == 0 || !CommonExport.validFileFormat(headerListInFile, headerNameList.length, Arrays.asList(headerNameList))) {
-                    resultInSideDto.setKey(Constants.RESPONSE_KEY.FILE_INVALID_FORMAT);
+                    resultInSideDto.setKey(Constants.ResponseKey.FILE_INVALID_FORMAT);
                     return resultInSideDto;
                 }
                 //Lấy dữ liệu import
@@ -374,7 +374,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                         1000
                 );
                 if (dataImportList.size() > 1500) {
-                    resultInSideDto.setKey(Constants.RESPONSE_KEY.DATA_OVER);
+                    resultInSideDto.setKey(Constants.ResponseKey.DATA_OVER);
                     return resultInSideDto;
                 }
                 if (!dataImportList.isEmpty()) {
@@ -450,12 +450,12 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                     } else {
                         File fileExport = exportTemplate(employeeDTOList,
                                 Constants.RESULT_IMPORT);
-                        resultInSideDto.setKey(Constants.RESPONSE_KEY.ERROR);
+                        resultInSideDto.setKey(Constants.ResponseKey.ERROR);
                         resultInSideDto.setFile(fileExport);
                     }
                 } else {
-                    resultInSideDto.setKey(Constants.RESPONSE_KEY.NO_DATA);
-                    resultInSideDto.setMessage(Constants.RESPONSE_KEY.FILE_IS_NULL);
+                    resultInSideDto.setKey(Constants.ResponseKey.NO_DATA);
+                    resultInSideDto.setMessage(Constants.ResponseKey.FILE_IS_NULL);
                     File fileExport = exportTemplate(employeeDTOList,
                             Constants.RESULT_IMPORT);
                     resultInSideDto.setFile(fileExport);
@@ -464,7 +464,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            resultInSideDto.setKey(Constants.RESPONSE_KEY.ERROR);
+            resultInSideDto.setKey(Constants.ResponseKey.ERROR);
             resultInSideDto.setMessage(e.getMessage());
         }
         return resultInSideDto;

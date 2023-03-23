@@ -55,7 +55,7 @@ public class JwtUserDetails implements UserDetails {
 
     public static JwtUserDetails build(UserDto userDto) {
         List<GrantedAuthority> authorities = userDto.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .map(role -> new SimpleGrantedAuthority(role.getCode().name()))
                 .collect(Collectors.toList());
 
         return new JwtUserDetails(

@@ -11,19 +11,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RolesDto {
     private Long id;
-    private ERole name;
+    private ERole code;
 
     private String rolesInput;
 
-    public RolesDto(Long id, ERole name) {
+    public RolesDto(Long id, ERole code) {
         this.id = id;
-        this.name = name;
-    }
-
-    public RolesEntity toEntity() {
-        return new RolesEntity(
-                id,
-                name
-        );
+        this.code = code;
     }
 }

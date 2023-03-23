@@ -44,13 +44,4 @@ public class UserDto {
         this.password = password;
         this.email = email;
     }
-
-    public UserEntity toEntity() {
-        return new UserEntity(
-                id,
-                username,
-                password,
-                email
-        );
-    }
 }

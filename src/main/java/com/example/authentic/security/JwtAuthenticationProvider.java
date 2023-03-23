@@ -31,7 +31,7 @@ public class JwtAuthenticationProvider {
                 .setSubject((userPrincipal.getUsername()))
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + Constants.AUTH_KEY.EXPIRATION_MS))
+                .setExpiration(new Date(System.currentTimeMillis() + Constants.AuthKey.EXPIRATION_MS))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
@@ -41,7 +41,6 @@ public class JwtAuthenticationProvider {
         Claims body = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken).getBody();
         JwtResponse response = new JwtResponse();
         response.setUsername(body.getSubject());
-        response.setId(Long.parseLong((String) body.get("id")));
         lstRoles.add((String) body.get("roles"));
         response.setRoles(lstRoles);
         return response;
