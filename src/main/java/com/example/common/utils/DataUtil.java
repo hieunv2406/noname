@@ -1,6 +1,12 @@
 package com.example.common.utils;
 
 import com.google.common.base.Splitter;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
+@Slf4j
 public class DataUtil {
 
     public static List<String> splitDot(String input) {
@@ -65,8 +72,9 @@ public class DataUtil {
     }
 
     /**
-    * chuyển Date sang String
-    * @param date Date ngày cần chuyển
+     * chuyển Date sang String
+     *
+     * @param date Date ngày cần chuyển
      * @return String yyyy-MM-dd hh:mm:ss
      **/
     public static String convertDateToString(Date date) {
@@ -76,6 +84,7 @@ public class DataUtil {
 
     /**
      * chuyển Date sang String
+     *
      * @param date Date ngày cần chuyển
      * @return String yyyy-MM-dd
      **/
@@ -86,6 +95,7 @@ public class DataUtil {
 
     /**
      * chuyển String sang Date
+     *
      * @param input String ngày cần chuyển
      * @return Date yyyy-MM-dd hh:mm:ss
      **/
@@ -96,6 +106,7 @@ public class DataUtil {
 
     /**
      * chuyển String sang Date dd/MM/yyyy
+     *
      * @param input String ngày cần chuyển
      * @return Date dd/MM/yyyy hh:mm:ss
      **/
@@ -106,6 +117,7 @@ public class DataUtil {
 
     /**
      * chuyển String sang Date
+     *
      * @param input String ngày cần chuyển
      * @return Date yyyy-MM-dd
      **/
@@ -116,6 +128,7 @@ public class DataUtil {
 
     /**
      * Kiểm tra định dạng Date
+     *
      * @param input String ngày cần kiểm tra
      * @return boolean valid
      **/
@@ -146,9 +159,10 @@ public class DataUtil {
 
     /**
      * Lấy ngày hiện tại dưới dạng dd_MM_yyyy_HH_mm_ss
+     *
      * @return String strCurTimeExp
      **/
-    public static String getCurrentTime(){
+    public static String getCurrentTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat();
         dateFormat.applyPattern("dd/MM/yyy HH:mm:ss");
         String strCurTimeExp = dateFormat.format(new Date());
@@ -156,5 +170,30 @@ public class DataUtil {
         strCurTimeExp = strCurTimeExp.replaceAll(" ", "_");
         strCurTimeExp = strCurTimeExp.replaceAll(":", "_");
         return strCurTimeExp;
+    }
+
+    public static String getCurrentToken() {
+        if (RequestContextHolder.getRequestAttributes() == null) {
+            return null;
+        }
+        Object token = RequestContextHolder.currentRequestAttributes().getAttribute("token", 0);
+        return token != null ? token.toString() : null;
+    }
+
+    public static String getUsernameFromJwtToken() {
+        String token = getCurrentToken();
+        if (token == null) {
+            return null;
+        }
+        try {
+            int idx = token.lastIndexOf('.');
+            String withoutSignature = token.substring(0, idx + 1);
+            Claims body = Jwts.parser().parseClaimsJwt(withoutSignature).getBody();
+            Object username = body.get("username");
+            return username != null ? username.toString() : null;
+        } catch (ExpiredJwtException | UnsupportedJwtException ex) {
+            log.error("ERROR - getUsernameFromJwtToken:" + ex.getMessage(), ex);
+            return null;
+        }
     }
 }

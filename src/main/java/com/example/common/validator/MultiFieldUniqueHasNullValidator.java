@@ -39,7 +39,7 @@ public class MultiFieldUniqueHasNullValidator implements ConstraintValidator<Mul
                 params.add(field);
                 mapField.put(fieldClass.getName(), fieldClass.get(obj));
             }
-            Long idFieldValue = 0L;
+//            Long idFieldValue = 0L;
 //            if (BeanUtils.getProperty()){
 //
 //            }

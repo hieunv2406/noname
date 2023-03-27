@@ -1,7 +1,7 @@
 package com.example.authentic.config;
 
 
-import com.example.authentic.business.UserDetailsServiceImpl;
+import com.example.authentic.services.UserDetailsServiceImpl;
 import com.example.authentic.security.JwtAuthenticationEntryPoint;
 import com.example.authentic.security.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,43 +54,19 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests().antMatchers("/api/account/**").permitAll()
-                .antMatchers("/public/**").permitAll()
-                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger-resources/**",
-                        "/swagger-ui.html", "/webjars/**").permitAll() //tạm thời để dùng swagger
+                .antMatchers("/api/public/**").permitAll()
+                .antMatchers("/v2/api-docs",
+                        "/configuration/**",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.headers().cacheControl();
 
     }
-
-    /*
-//    @Bean
-//    public AuthenticationManager authenticationManager() {
-//        return new ProviderManager(Collections.singletonList(authenticationProvider));
-//    }
-//    @Bean
-//    public JwtAuthenticationTokenFilter authenticationTokenFilter() throws Exception {
-//        JwtAuthenticationTokenFilter filter = new JwtAuthenticationTokenFilter();
-//        filter.setAuthenticationManager(authenticationManagerBean());
-//        filter.setAuthenticationSuccessHandler(new JwtSuccessHandler());
-//        return filter;
-//    }
-//    @Bean
-//    public JwtAuthenticationTokenFilter authenticationTokenFilter() throws Exception {
-//        JwtAuthenticationTokenFilter filter = new JwtAuthenticationTokenFilter();
-//        filter.setAuthenticationManager(authenticationManager());
-//        filter.setAuthenticationSuccessHandler(new JwtSuccessHandler());
-//        return filter;
-//    }
-    // muốn sử dụng custom xác thực provider (viết hàm chức năng xử lý username, passs)
-//    @Override
-//    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//        authenticationManagerBuilder.authenticationProvider(customAuthenticationProvider);
-//    }
-*/
 }

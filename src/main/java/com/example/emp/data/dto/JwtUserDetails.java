@@ -1,4 +1,4 @@
-package com.example.authentic.model;
+package com.example.emp.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

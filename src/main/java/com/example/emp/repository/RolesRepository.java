@@ -1,7 +1,7 @@
-package com.example.authentic.repository;
+package com.example.emp.repository;
 
-import com.example.authentic.model.ERole;
-import com.example.authentic.model.RoleEntity;
+import com.example.emp.data.entity.ERole;
+import com.example.emp.data.entity.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,5 +1,6 @@
-package com.example.authentic.model;
+package com.example.emp.data.entity;
 
+import com.example.emp.data.dto.RolesDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;

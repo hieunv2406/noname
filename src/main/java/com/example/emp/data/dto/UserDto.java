@@ -1,14 +1,13 @@
-package com.example.authentic.model;
+package com.example.emp.data.dto;
 
 import com.example.common.validator.MultiFieldUnique;
-import com.example.emp.data.entity.EmployeeEntity;
+import com.example.emp.data.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 

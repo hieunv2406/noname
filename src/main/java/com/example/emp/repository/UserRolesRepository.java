@@ -1,6 +1,6 @@
-package com.example.authentic.repository;
+package com.example.emp.repository;
 
-import com.example.authentic.model.UserRoleEntity;
+import com.example.emp.data.entity.UserRoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRolesRepository extends JpaRepository<UserRoleEntity, Long> {

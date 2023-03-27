@@ -1,4 +1,4 @@
-package com.example.authentic.model;
+package com.example.emp.data.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

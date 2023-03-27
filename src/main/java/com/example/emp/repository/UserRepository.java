@@ -1,6 +1,6 @@
-package com.example.authentic.repository;
+package com.example.emp.repository;
 
-import com.example.authentic.model.UserEntity;
+import com.example.emp.data.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

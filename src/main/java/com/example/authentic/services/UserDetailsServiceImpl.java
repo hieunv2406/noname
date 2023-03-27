@@ -1,7 +1,9 @@
-package com.example.authentic.business;
+package com.example.authentic.services;
 
-import com.example.authentic.model.*;
-import com.example.authentic.repository.UserRepository;
+import com.example.emp.data.entity.UserEntity;
+import com.example.emp.data.entity.UserRoleEntity;
+import com.example.emp.repository.UserRepository;
+import com.example.emp.data.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,13 +26,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         UserDto userDto = user.toDTO();
-        Set<RolesDto> rolesDtos = new HashSet<>();
+        Set<RolesDto> rolesDTOs = new HashSet<>();
         List<UserRoleEntity> userRoleEntityList = user.getUserRoles();
         for (UserRoleEntity dto : userRoleEntityList) {
-//            Optional<RoleEntity> rolesEntity = rolesRepository.findById(dto.getRolesId());
-            rolesDtos.add(dto.getRole().toDTO());
+            rolesDTOs.add(dto.getRole().toDTO());
         }
-        userDto.setRoles(rolesDtos);
+        userDto.setRoles(rolesDTOs);
         return JwtUserDetails.build(userDto);
     }
 }

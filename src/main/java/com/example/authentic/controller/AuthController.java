@@ -1,14 +1,20 @@
 package com.example.authentic.controller;
 
-import com.example.authentic.model.*;
-import com.example.authentic.repository.RolesRepository;
-import com.example.authentic.repository.UserRepository;
-import com.example.authentic.repository.UserRolesRepository;
+import com.example.authentic.exceptions.AuthenException;
 import com.example.authentic.security.JwtAuthenticationProvider;
 import com.example.common.Constants;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.emp.data.dto.JwtRequest;
+import com.example.emp.data.dto.JwtResponse;
+import com.example.emp.data.dto.JwtUserDetails;
 import com.example.emp.data.dto.UserRequest;
+import com.example.emp.data.entity.ERole;
+import com.example.emp.data.entity.RoleEntity;
+import com.example.emp.data.entity.UserEntity;
+import com.example.emp.data.entity.UserRoleEntity;
+import com.example.emp.repository.RolesRepository;
+import com.example.emp.repository.UserRepository;
+import com.example.emp.repository.UserRolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,21 +50,13 @@ public class AuthController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping(path = "/signUp")
-    public ResponseEntity<ResultInsideDTO> registerAccount(@RequestBody @Valid UserRequest userRequest) {
-        ResultInsideDTO resultDTO = new ResultInsideDTO();
-        Map<String, String> errors = new HashMap<>();
-        resultDTO.setKey(Constants.ResponseKey.SUCCESS);
+    public ResponseEntity<ResultInsideDTO> registerAccount(@RequestBody @Valid UserRequest userRequest) throws AuthenException {
+        ResultInsideDTO resultDTO = new ResultInsideDTO(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.SUCCESS));
         if (Boolean.TRUE.equals(userRepository.existsByUsername(userRequest.getUsername()))) {
-            errors.put("username", "is already taken!");
-            resultDTO.setKey(Constants.ResponseKey.ERROR);
-            resultDTO.setErrors(errors);
-            return new ResponseEntity<>(resultDTO, HttpStatus.BAD_REQUEST);
+            throw new AuthenException("username is already taken!");
         }
         if (Boolean.TRUE.equals(userRepository.existsByEmail(userRequest.getEmail()))) {
-            errors.put("email", "is already in use!");
-            resultDTO.setKey(Constants.ResponseKey.ERROR);
-            resultDTO.setErrors(errors);
-            return new ResponseEntity<>(resultDTO, HttpStatus.BAD_REQUEST);
+            throw new AuthenException("email is already in use!");
         }
         // Create new user's account
         final String errorContent = "Error: Role is not found.";
@@ -113,9 +111,8 @@ public class AuthController {
     }
 
     @PostMapping(path = "/signIn")
-    public ResponseEntity<ResultInsideDTO> loginAccount(@RequestBody @Valid JwtRequest jwtRequest) {
-        ResultInsideDTO resultDto = new ResultInsideDTO(Constants.ResponseKey.SUCCESS);
-        Map<String, String> errors = new HashMap<>();
+    public ResponseEntity<ResultInsideDTO> loginAccount(@RequestBody @Valid JwtRequest jwtRequest) throws AuthenException {
+        ResultInsideDTO resultDto = new ResultInsideDTO(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.SUCCESS));
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
@@ -125,16 +122,22 @@ public class AuthController {
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
-            resultDto.setObject(new JwtResponse(jwt,
+            resultDto.setData(new JwtResponse(jwt,
                     userDetails.getUsername(),
                     userDetails.getEmail(),
                     roles));
         } catch (AuthenticationException ex) {
-            resultDto.setKey(Constants.ResponseKey.ERROR);
-            errors.put("error", ex.getMessage());
-            resultDto.setErrors(errors);
+            throw new AuthenException(ex.getMessage());
         }
         return new ResponseEntity<>(resultDto, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(AuthenException.class)
+    public ResponseEntity<ResultInsideDTO> handleAuthenException(AuthenException authenException) {
+        ResultInsideDTO resultInsideDTO = new ResultInsideDTO(
+                new ResultInsideDTO.Status(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name()),
+                authenException.getMessage());
+        return new ResponseEntity<>(resultInsideDTO, HttpStatus.BAD_REQUEST);
     }
 
 }

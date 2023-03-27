@@ -1,8 +1,9 @@
 package com.example.authentic.security;
 
-import com.example.authentic.business.UserDetailsServiceImpl;
+import com.example.authentic.services.UserDetailsServiceImpl;
 import com.example.common.Constants;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -33,17 +35,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         try {
             String jwt = parseJwt(httpServletRequest);
             if (jwt != null && jwtAuthenticationProvider.validateJwtToken(jwt)) {
-
                 String username = jwtAuthenticationProvider.getUserNameFromJwtToken(jwt);
-
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                logger.info("Cannot set the Security Context");
+                log.info("Cannot set the Security Context");
             }
         } catch (ExpiredJwtException e) {
             String isRefreshToken = httpServletRequest.getHeader("isRefreshToken");
@@ -52,15 +53,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refreshtoken")) {
                 allowForRefreshToken(e, httpServletRequest);
             } else
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             httpServletRequest.setAttribute("exception", e);
         } catch (BadCredentialsException ex) {
-            logger.error(ex.getMessage(), ex);
+            log.error(ex.getMessage(), ex);
             httpServletRequest.setAttribute("exception", ex);
         } catch (Exception exception) {
-            logger.error(exception.getMessage(), exception);
+            log.error(exception.getMessage(), exception);
         }
-
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
@@ -82,6 +82,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String headerAuth = httpServletRequest.getHeader(Constants.AuthKey.HEADER_KEY);
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(Constants.AuthKey.PREFIX_KEY)) {
             return headerAuth.substring(7, headerAuth.length());
+        } else if (StringUtils.hasText(headerAuth) && !headerAuth.startsWith(Constants.AuthKey.PREFIX_KEY)) {
+            return headerAuth;
         }
         return null;
     }

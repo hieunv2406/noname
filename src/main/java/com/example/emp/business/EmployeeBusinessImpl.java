@@ -9,6 +9,8 @@ import com.example.common.dto.ResultInsideDTO;
 import com.example.common.utils.DataUtil;
 import com.example.common.utils.FileUtil;
 import com.example.emp.data.dto.EmployeeDTO;
+import com.example.emp.exceptions.EmployeeNotFoundException;
+import com.example.emp.exceptions.FileInvalidException;
 import com.example.emp.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.GenericValidator;
@@ -19,7 +21,10 @@ import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -45,7 +50,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
     }
 
     @Override
-    public ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO) {
+    public ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO) throws EmployeeNotFoundException {
         log.info("updateEmployee", employeeDTO);
         return employeeRepository.updateEmployee(employeeDTO);
     }
@@ -103,7 +108,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
             XSSFSheet sheetOne = workbook.getSheetAt(0);
             // <editor-fold desc="fill Data">
             List<EmployeeDTO> employeeDTOList = employeeRepository.getListDataExport(employeeDTO);
-            if (!DataUtil.isNullOrEmpty(employeeDTOList) && employeeDTOList.size() > 0) {
+            if (!DataUtil.isNullOrEmpty(employeeDTOList) && !employeeDTOList.isEmpty()) {
                 for (EmployeeDTO item : employeeDTOList) {
                     exportExcel.createCell(sheetOne, 0, beginRow, String.valueOf(stt), null);
                     exportExcel.createCell(sheetOne, 1, beginRow, item.getCode(), null);
@@ -322,24 +327,18 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
     }
 
     @Override
-    public ResultInsideDTO importData(MultipartFile multipartFile) throws Exception {
+    public ResultInsideDTO importData(MultipartFile multipartFile) {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        ResultInsideDTO resultInSideDto = new ResultInsideDTO();
-        resultInSideDto.setKey(Constants.ResponseKey.SUCCESS);
+        ResultInsideDTO resultInSideDto = new ResultInsideDTO(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.SUCCESS));
         try {
             //Kiểm tra file đầu vào
             if (multipartFile == null || multipartFile.isEmpty()) {
-                resultInSideDto.setKey(Constants.ResponseKey.FILE_IS_NULL);
-                return resultInSideDto;
+                throw new FileInvalidException(Constants.ResponseKey.FILE_IS_NULL);
             } else {
                 String filePath = FileUtil
                         .saveTempFile(multipartFile.getOriginalFilename(), multipartFile.getBytes(),
                                 tempFolder);
-                if (!Constants.ResponseKey.SUCCESS.equals(resultInSideDto.getKey())) {
-                    return resultInSideDto;
-                }
                 File fileImport = new File(filePath);
-
                 List<Object[]> headerListInFile;
                 headerListInFile = CommonImport.getDataFromExcelFile(
                         fileImport,
@@ -360,9 +359,8 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                         I18n.getLanguage("language.employee.address")
                 };
                 //Kiểm tra form header có đúng chuẩn
-                if (headerListInFile.size() == 0 || !CommonExport.validFileFormat(headerListInFile, headerNameList.length, Arrays.asList(headerNameList))) {
-                    resultInSideDto.setKey(Constants.ResponseKey.FILE_INVALID_FORMAT);
-                    return resultInSideDto;
+                if (headerListInFile.isEmpty() || !CommonExport.validFileFormat(headerListInFile, headerNameList.length, Arrays.asList(headerNameList))) {
+                    throw new FileInvalidException(Constants.ResponseKey.FILE_INVALID_FORMAT);
                 }
                 //Lấy dữ liệu import
                 List<Object[]> dataImportList = CommonImport.getDataFromExcelFile(
@@ -374,8 +372,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                         1000
                 );
                 if (dataImportList.size() > 1500) {
-                    resultInSideDto.setKey(Constants.ResponseKey.DATA_OVER);
-                    return resultInSideDto;
+                    throw new FileInvalidException(Constants.ResponseKey.DATA_OVER);
                 }
                 if (!dataImportList.isEmpty()) {
                     int row = 4;
@@ -450,11 +447,11 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
                     } else {
                         File fileExport = exportTemplate(employeeDTOList,
                                 Constants.RESULT_IMPORT);
-                        resultInSideDto.setKey(Constants.ResponseKey.ERROR);
+                        resultInSideDto.setStatus(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.ERROR));
                         resultInSideDto.setFile(fileExport);
                     }
                 } else {
-                    resultInSideDto.setKey(Constants.ResponseKey.NO_DATA);
+                    resultInSideDto.setStatus(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.NO_DATA));
                     resultInSideDto.setMessage(Constants.ResponseKey.FILE_IS_NULL);
                     File fileExport = exportTemplate(employeeDTOList,
                             Constants.RESULT_IMPORT);
@@ -464,7 +461,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            resultInSideDto.setKey(Constants.ResponseKey.ERROR);
+            resultInSideDto.setStatus(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.ERROR));
             resultInSideDto.setMessage(e.getMessage());
         }
         return resultInSideDto;
@@ -499,7 +496,7 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
 //            employeeDTO.setResultImport(I18n.getLanguage("employee.err.address"));
 //            return employeeDTO;
 //        }
-        if (!DataUtil.isNullOrEmpty(list) && list.size() > 0 && DataUtil.isNullOrEmpty(employeeDTO.getResultImport())) {
+        if (!DataUtil.isNullOrEmpty(list) && !list.isEmpty() && DataUtil.isNullOrEmpty(employeeDTO.getResultImport())) {
             employeeDTO = validateDuplicate(list, employeeDTO);
         }
         return employeeDTO;
@@ -518,5 +515,13 @@ public class EmployeeBusinessImpl implements EmployeeBusiness {
             }
         }
         return employeeDTO;
+    }
+
+    @ExceptionHandler(FileInvalidException.class)
+    public ResponseEntity<ResultInsideDTO> handleFileInvalidException(FileInvalidException fileInvalidException) {
+        ResultInsideDTO resultInsideDTO = new ResultInsideDTO(
+                new ResultInsideDTO.Status(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name()),
+                fileInvalidException.getMessage());
+        return new ResponseEntity<>(resultInsideDTO, HttpStatus.BAD_REQUEST);
     }
 }

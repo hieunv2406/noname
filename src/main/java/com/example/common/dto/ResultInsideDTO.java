@@ -12,34 +12,31 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResultInsideDTO {
-    private Long id;
-    private String key;
+    private Status status;
     private String message;
-    private Object object;
+    private Object data;
     private File file;
-    private Map<String, String> errors;
 
-    public ResultInsideDTO(String key, String message, Object object, HashMap<String, String> errors) {
-        this.key = key;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Status{
+        private int code;
+        private String description;
+    }
+
+    public ResultInsideDTO(Status status, String message) {
+        this.status = status;
         this.message = message;
-        this.object = object;
-        this.errors = errors;
     }
 
-    public ResultInsideDTO(String key, String message, HashMap<String, String> errors) {
-        this.key = key;
+    public ResultInsideDTO(Status status, String message, Object data) {
+        this.status = status;
         this.message = message;
-        this.errors = errors;
+        this.data = data;
     }
 
-    public ResultInsideDTO(String key) {
-        this.key = key;
-    }
-
-    public ResultInsideDTO(String key, String keyMap, String valueMap) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put(keyMap, valueMap);
-        this.key = key;
-        this.errors = errors;
+    public ResultInsideDTO(Status status) {
+        this.status = status;
     }
 }

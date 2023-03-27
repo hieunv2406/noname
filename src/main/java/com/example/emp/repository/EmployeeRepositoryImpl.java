@@ -8,9 +8,13 @@ import com.example.common.repository.BaseRepository;
 import com.example.common.utils.DataUtil;
 import com.example.emp.data.dto.EmployeeDTO;
 import com.example.emp.data.entity.EmployeeEntity;
+import com.example.emp.exceptions.EmployeeNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,25 +26,23 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
 
 
     @Override
-    public EmployeeDTO findEmployeeById(Long employee_id) {
-        EmployeeEntity employeeEntity = getEntityManager().find(EmployeeEntity.class, employee_id);
+    public EmployeeDTO findEmployeeById(Long employeeId) {
+        EmployeeEntity employeeEntity = getEntityManager().find(EmployeeEntity.class, employeeId);
         EmployeeDTO employeeDTO = employeeEntity.toDto();
         return employeeDTO;
     }
 
     @Override
     public ResultInsideDTO insertEmployee(EmployeeDTO employeeDTO) {
-        ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constants.ResponseKey.SUCCESS);
+        ResultInsideDTO resultInsideDTO = new ResultInsideDTO(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.SUCCESS));
         EmployeeEntity employeeEntity = getEntityManager().merge(employeeDTO.toEntity());
-        resultInsideDTO.setId(employeeEntity.getEmployeeId());
+        resultInsideDTO.setData(employeeEntity);
         return resultInsideDTO;
     }
 
     @Override
     public ResultInsideDTO insertEmployeeList(List<EmployeeDTO> employeeDTOList) {
-        ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constants.ResponseKey.SUCCESS);
+        ResultInsideDTO resultInsideDTO = new ResultInsideDTO(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.SUCCESS));
         for (EmployeeDTO employeeDTO : employeeDTOList) {
             getEntityManager().merge(employeeDTO.toEntity());
         }
@@ -48,23 +50,21 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
     }
 
     @Override
-    public ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO) {
-        ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constants.ResponseKey.SUCCESS);
+    public ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO) throws EmployeeNotFoundException {
+        ResultInsideDTO resultInsideDTO = new ResultInsideDTO(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.SUCCESS));
         EmployeeEntity employeeEntity = getEntityManager().find(EmployeeEntity.class, employeeDTO.getEmployeeId());
         if (employeeEntity != null) {
             employeeEntity = getEntityManager().merge(employeeDTO.toEntity());
-            resultInsideDTO.setId(employeeEntity.getEmployeeId());
+            resultInsideDTO.setData(employeeEntity);
         } else {
-            resultInsideDTO.setKey(Constants.ResponseKey.RECORD_NOT_EXIST);
+            throw new EmployeeNotFoundException(Constants.ResponseKey.RECORD_NOT_EXIST);
         }
         return resultInsideDTO;
     }
 
     @Override
     public ResultInsideDTO deleteEmployeeById(Long employeeId) {
-        ResultInsideDTO resultInsideDTO = new ResultInsideDTO();
-        resultInsideDTO.setKey(Constants.ResponseKey.SUCCESS);
+        ResultInsideDTO resultInsideDTO = new ResultInsideDTO(new ResultInsideDTO.Status(HttpStatus.OK.value(), Constants.ResponseKey.SUCCESS));
         EmployeeEntity employeeEntity = getEntityManager().find(EmployeeEntity.class, employeeId);
         getEntityManager().remove(employeeEntity);
         return resultInsideDTO;
@@ -125,5 +125,13 @@ public class EmployeeRepositoryImpl extends BaseRepository implements EmployeeRe
         baseDTO.setSqlQuery(sql);
         baseDTO.setParameters(parameter);
         return baseDTO;
+    }
+
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public ResponseEntity<ResultInsideDTO> handleEmployeeNotFoundException(EmployeeNotFoundException employeeNotFoundException) {
+        ResultInsideDTO resultInsideDTO = new ResultInsideDTO(
+                new ResultInsideDTO.Status(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name()),
+                employeeNotFoundException.getMessage());
+        return new ResponseEntity<>(resultInsideDTO, HttpStatus.NOT_FOUND);
     }
 }

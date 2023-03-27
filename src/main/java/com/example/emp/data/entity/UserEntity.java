@@ -1,7 +1,6 @@
-package com.example.authentic.model;
+package com.example.emp.data.entity;
 
-import com.example.emp.data.entity.CartEntity;
-import com.example.emp.data.entity.InvoiceEntity;
+import com.example.emp.data.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;

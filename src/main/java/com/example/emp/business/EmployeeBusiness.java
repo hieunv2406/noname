@@ -3,6 +3,7 @@ package com.example.emp.business;
 import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
 import com.example.emp.data.dto.EmployeeDTO;
+import com.example.emp.exceptions.EmployeeNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -14,7 +15,7 @@ public interface EmployeeBusiness {
 
     ResultInsideDTO insertEmployee(EmployeeDTO employeeDTO);
 
-    ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO);
+    ResultInsideDTO updateEmployee(EmployeeDTO employeeDTO) throws EmployeeNotFoundException;
 
     ResultInsideDTO deleteEmployeeById(Long employeeId);
 

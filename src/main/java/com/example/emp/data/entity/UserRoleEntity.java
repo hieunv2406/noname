@@ -1,4 +1,4 @@
-package com.example.authentic.model;
+package com.example.emp.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;

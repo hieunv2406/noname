@@ -2,8 +2,9 @@ package com.example.emp.controller;
 
 import com.example.common.dto.Datatable;
 import com.example.common.dto.ResultInsideDTO;
-import com.example.emp.data.dto.EmployeeDTO;
 import com.example.emp.business.EmployeeBusiness;
+import com.example.emp.data.dto.EmployeeDTO;
+import com.example.emp.exceptions.EmployeeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class EmployeeController {
     }
 
     @PostMapping(value = "/update")
-    public ResponseEntity<ResultInsideDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<ResultInsideDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) throws EmployeeNotFoundException {
         ResultInsideDTO resultInsideDTO = employeeBusiness.updateEmployee(employeeDTO);
         return new ResponseEntity<>(resultInsideDTO, HttpStatus.OK);
     }

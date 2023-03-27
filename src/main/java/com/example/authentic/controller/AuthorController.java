@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/rest/hello")
-public class HelloController {
+@RequestMapping("/api/author")
+public class AuthorController {
 
     @GetMapping("/all")
     public String allAccess() {

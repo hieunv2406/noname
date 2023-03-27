@@ -1,5 +1,6 @@
-package com.example.authentic.model;
+package com.example.emp.data.dto;
 
+import com.example.emp.data.entity.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

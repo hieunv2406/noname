@@ -40,8 +40,8 @@ public abstract class BaseRepository<T> {
         return namedParameterJdbcTemplate;
     }
 
-    public Datatable getListDataTableBySqlQuery(String sqlQuery, Map<String, Object> parameters,
-                                                int page, int pageSize, Class<?> mappedClass, String sortName, String sortType) {
+    public Datatable getListDataTableBySqlQuery(String sqlQuery, Map<String, Object> parameters, int page,
+                                                int pageSize, Class<?> mappedClass, String sortName, String sortType) {
         Datatable dataReturn = new Datatable();
         String sqlQueryResult = " SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( "
                 + sqlQuery
